@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="fragmentation_swipeback">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/fragmentation_swipeback.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

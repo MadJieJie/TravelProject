@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Travel</string>
+
+    <string name="tool">工具箱</string>
+    <string name="run">行程助手</string>
+    <string name="travel">游记</string>
+    <string name="user">我的</string>
+
+
+    <!--weather-->
+    <string name="today">今天</string>
+    <string name="tomorrow">明天</string>
+    <string name="addComplete">加载完毕，✺◟(∗❛ัᴗ❛ั∗)◞✺</string>
+
+    <!--login-->
+    <string name="please_login">请登录</string>
+    <string name="inputPassword">请输入密码</string>
+    <string name="repeatPassword">请输入密码</string>
+    <string name="inputUser">请输入用户名</string>
+
+    <!--tool-->
+    <string name="weather">天气</string>
+    <string name="scenery">景点</string>
+    <string name="billBook">记账本</string>
+
+    <!--tool-->
+    <string name="hotel">酒店推荐</string>
+    <string name="memorandum">备忘录</string>
+
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/fengjie/myapplication/modules/tool/adapter/weather/WeatherAdapter.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/fengjie/myapplication/modules/tool/bean/Weather.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/fengjie/myapplication/modules/tool/ui/ToolFragment.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/fengjie/myapplication/modules/tool/ui/WeatherFragment.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/fengjie/myapplication/utils/weather/Util.java" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>

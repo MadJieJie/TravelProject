@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+    <com.fengjie.percentlibrary.PercentLinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        style="@style/w_m_h_m"
+        android:background="@color/gray"
+        android:orientation="vertical">
+
+        <com.fengjie.myapplication.view.DefinedMenu
+            android:id="@+id/menu_view_tool"
+            style="@style/w_m_h_0"
+            android:background="@color/color_str_tool"
+            app:layout_heightPercent="8%"/>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/content_viewPager_tool"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/menu_view_tool">
+        </android.support.v4.view.ViewPager>
+
+        <!--<FrameLayout-->
+        <!--android:id="@+id/weatherContent_fl_tool"-->
+        <!--style="@style/w_m_h_m"-->
+        <!--android:background="@color/gray"-->
+        <!--app:layout_heightPercent="48%">-->
+        <!--<TextView android:layout_width="match_parent" android:layout_height="match_parent"/>-->
+
+        <!--</FrameLayout>-->
+
+
+        <!--<com.fengjie.percentlibrary.PercentLinearLayout-->
+        <!--style="@style/w_m_h_m"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="horizontal">-->
+        <!--<Button android:id="@+id/weather_btn_tool"-->
+        <!--style="@style/left_btn_tool"-->
+        <!--android:drawableTop="@drawable/btn_weather_tool"-->
+        <!--android:text="行程天气"-->
+        <!--app:layout_heightPercent="96%"-->
+        <!--app:layout_marginBottomPercent="2%"-->
+        <!--app:layout_marginLeftPercent="1%"-->
+        <!--app:layout_marginRightPercent="0.5%"-->
+        <!--app:layout_marginTopPercent="2%"-->
+        <!--app:layout_widthPercent="48.5%"/>-->
+        <!--<Button android:id="@+id/scenery_btn_tool"-->
+        <!--style="@style/left_btn_tool"-->
+        <!--android:drawableTop="@drawable/btn_weather_tool"-->
+        <!--android:text="景点推荐"-->
+        <!--app:layout_heightPercent="96%"-->
+        <!--app:layout_marginBottomPercent="2%"-->
+        <!--app:layout_marginLeftPercent="0.5%"-->
+        <!--app:layout_marginRightPercent="1%"-->
+        <!--app:layout_marginTopPercent="2%"-->
+        <!--app:layout_widthPercent="48.5%"/>-->
+        <!--</com.fengjie.percentlibrary.PercentLinearLayout>-->
+
+        <!--<com.fengjie.percentlibrary.PercentLinearLayout-->
+        <!--style="@style/w_m_h_m"-->
+        <!--android:layout_weight="1"-->
+        <!--android:orientation="horizontal">-->
+        <!--<Button android:id="@+id/bill_btn_tool"-->
+        <!--style="@style/left_btn_tool"-->
+        <!--android:drawableTop="@drawable/btn_weather_tool"-->
+        <!--android:text="记账本"-->
+        <!--app:layout_heightPercent="96%"-->
+        <!--app:layout_marginBottomPercent="2%"-->
+        <!--app:layout_marginLeftPercent="1%"-->
+        <!--app:layout_marginRightPercent="0.5%"-->
+        <!--app:layout_marginTopPercent="2%"-->
+        <!--app:layout_widthPercent="48.5%"/>-->
+        <!--<Button android:id="@+id/strategy_btn_tool"-->
+        <!--style="@style/left_btn_tool"-->
+        <!--android:drawableTop="@drawable/btn_weather_tool"-->
+        <!--android:text="旅游攻略"-->
+        <!--app:layout_heightPercent="96%"-->
+        <!--app:layout_marginBottomPercent="2%"-->
+        <!--app:layout_marginLeftPercent="0.5%"-->
+        <!--app:layout_marginRightPercent="1%"-->
+        <!--app:layout_marginTopPercent="2%"-->
+        <!--app:layout_widthPercent="48.5%"/>-->
+        <!--</com.fengjie.percentlibrary.PercentLinearLayout>-->
+
+    </com.fengjie.percentlibrary.PercentLinearLayout>
+
+
+    <!--layout_widthPercent、layout_heightPercent、-->
+    <!--layout_marginPercent、layout_marginLeftPercent、-->
+    <!--layout_marginTopPercent、layout_marginRightPercent、-->
+    <!--layout_marginBottomPercent、layout_marginStartPercent、layout_marginEndPercent。-->

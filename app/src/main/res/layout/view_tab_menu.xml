@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relativeLayout_menu"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:layout_alignParentTop="true"
+    android:minHeight="?attr/actionBarSize">
+
+    <ImageButton
+        android:id="@+id/left_btn_menu"
+        style="@style/left_btn_menu"
+        android:layout_centerVertical="true"/>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tab_tabLayout_menu"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_toLeftOf="@+id/right_btn_menu"
+        android:layout_toRightOf="@+id/left_btn_menu"
+        app:tabIndicatorColor="#fff"
+        app:tabIndicatorHeight="2dp"
+        app:tabTextColor="@color/bule"
+        app:tabTextAppearance="@style/tabLayoutTextSize"
+        app:tabSelectedTextColor="@color/white"
+    />
+
+    <ImageButton
+        android:id="@+id/right_btn_menu"
+        style="@style/right_btn_menu"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fengjie.percentlibrary.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    style="@style/w_m_h_m"
+    android:background="@color/gray">
+
+
+    <!--layout_widthPercent、layout_heightPercent、-->
+    <!--layout_marginPercent、layout_marginLeftPercent、-->
+    <!--layout_marginTopPercent、layout_marginRightPercent、-->
+    <!--layout_marginBottomPercent、layout_marginStartPercent、layout_marginEndPercent。-->
+    <com.fengjie.myapplication.view.DefinedMenu android:id="@+id/menu_view_travel" style="@style/w_m_h_0"
+                                                android:background="@color/color_str_travel"
+                                                app:layout_heightPercent="8%"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/content_recyclerView_travel"
+        android:layout_below="@+id/menu_view_travel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+
+</com.fengjie.percentlibrary.PercentRelativeLayout>

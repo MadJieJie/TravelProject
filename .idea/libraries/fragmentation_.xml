@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="fragmentation-">
+    <ANNOTATIONS>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fragmentation/annotations.zip!/" />
+    </ANNOTATIONS>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fragmentation/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fragmentation/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

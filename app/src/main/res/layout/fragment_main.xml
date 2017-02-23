@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<com.mxn.soul.flowingdrawer_core.FlowingDrawer-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:id="@+id/drawerlayout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:clipChildren="false"-->
+    <!--android:clipToPadding="false"-->
+    <!--app:edMenuBackground="#dddddd"-->
+    <!--app:edMenuSize="260dp"-->
+    <!--app:edPosition="1">-->
+    <com.fengjie.percentlibrary.PercentRelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+        style="@style/w_m_h_m">
+        <FrameLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/container_fl_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/bottomBar_view_main"/>
+
+        <com.roughike.bottombar.BottomBar
+            android:id="@+id/bottomBar_view_main"
+            style="@style/w_m_h_0"
+            android:layout_alignParentBottom="true"
+            app:bb_behavior="shifting"
+            app:bb_tabXmlResource="@xml/bottombar_color_activity"
+            app:layout_heightPercent="8%"/>
+
+        <!--layout_widthPercent、layout_heightPercent、-->
+        <!--layout_marginPercent、layout_marginLeftPercent、-->
+        <!--layout_marginTopPercent、layout_marginRightPercent、-->
+        <!--layout_marginBottomPercent、layout_marginStartPercent、layout_marginEndPercent。-->
+
+    </com.fengjie.percentlibrary.PercentRelativeLayout>
+
+    <!--<com.mxn.soul.flowingdrawer_core.FlowingMenuLayout-->
+        <!--android:id="@+id/menulayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent">-->
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/menu_fl_main"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--tools:layout_conversion_absoluteHeight="0dp"-->
+            <!--tools:layout_conversion_absoluteWidth="0dp"-->
+            <!--tools:layout_conversion_absoluteX="0dp"-->
+            <!--tools:layout_conversion_absoluteY="0dp"/>-->
+
+    <!--</com.mxn.soul.flowingdrawer_core.FlowingMenuLayout>-->
+
+<!--</com.mxn.soul.flowingdrawer_core.FlowingDrawer>-->

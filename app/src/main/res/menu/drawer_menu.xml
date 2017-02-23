@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/menu_group_1">
+        <item
+            android:id="@+id/menu_feed"
+            android:icon="@drawable/icon_city"
+            android:title="My Feed" />
+        <item
+            android:id="@+id/menu_direct"
+            android:icon="@drawable/icon_city"
+            android:title="Instagram Direct" />
+        <item
+            android:id="@+id/menu_news"
+            android:icon="@drawable/icon_city"
+            android:title="News" />
+        <item
+            android:id="@+id/menu_popular"
+            android:icon="@drawable/icon_city"
+            android:title="Popular" />
+        <item
+            android:id="@+id/menu_photos_nearby"
+            android:icon="@drawable/icon_city"
+            android:title="Photos Nearby" />
+        <item
+            android:id="@+id/menu_photo_you_liked"
+            android:icon="@drawable/icon_city"
+            android:title="Photos You've Liked" />
+    </group>
+    <group android:id="@+id/menu_group_2">
+        <item
+            android:id="@+id/menu_settings"
+            android:title="Settings" />
+        <item
+            android:id="@+id/menu_about"
+            android:title="About" />
+    </group>
+</menu>

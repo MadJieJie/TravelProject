@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+    <tab
+        barColorWhenSelected="@color/color_str_tool"
+        icon="@mipmap/btn_favorites"
+        id="@+id/tab1"
+        title="工具箱"/>
+    <tab
+        barColorWhenSelected="@color/color_str_run"
+        icon="@mipmap/btn_nearby"
+        id="@+id/tab2"
+        title="行程助手"/>
+    <tab
+        barColorWhenSelected="@color/color_str_travel"
+        icon="@mipmap/btn_recents"
+        id="@+id/tab3"
+        title="游记"/>
+    <tab
+        barColorWhenSelected="@color/color_str_user"
+        icon="@mipmap/btn_friends"
+        id="@+id/tab4"
+        title="我的"/>
+
+</tabs>
