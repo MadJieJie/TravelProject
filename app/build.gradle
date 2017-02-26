@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+//apply plugin: 'me.tatarka.retrolambda' //加上这句加,入plugin声明,使用retrolambda来编译Java代码
 
 android {
     compileSdkVersion 25
@@ -37,6 +38,17 @@ android {
 }
 
 
+//retrolambda {
+//    //指定将源码编译的级别，使用下列代码，会将代码编译到兼容1.6的字节码格式
+//    javaVersion JavaVersion.VERSION_1_7
+//}
+//retrolambda {
+//    jdk System.getenv("JAVA8_HOME")
+//    oldJdk System.getenv("JAVA7_HOME")
+//    javaVersion JavaVersion.VERSION_1_7
+//}
+
+
 repositories        //must add this method that you can add arr package.
         {
             flatDir {
@@ -59,7 +71,8 @@ dependencies {
     compile(name: 'fragmentation', ext: 'aar')
     //fragment
     compile files('libs/fragmentation_swipeback.jar')
-    compile 'com.yalantis:contextmenu:1.0.7'
+    //    compile 'com.yalantis:contextmenu:1.0.7'
+
     //fragment menu
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -84,4 +97,5 @@ dependencies {
     compile 'com.android.support:design:25.1.0'
     compile 'com.mxn.soul:flowingdrawer-core:2.0.0'
     compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.lcodecorex:tkrefreshlayout:1.0.5'
 }

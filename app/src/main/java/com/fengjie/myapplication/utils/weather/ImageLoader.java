@@ -13,12 +13,23 @@ import com.bumptech.glide.Glide;
  */
 public class ImageLoader
 {
-
+	/**
+	 * 本地资源图片加载
+	 * @param context
+	 * @param imageRes
+	 * @param view
+	 */
 	public static void load ( Context context, @DrawableRes int imageRes, ImageView view )
 	{
 		Glide.with(context).load(imageRes).crossFade().into(view);  //平滑淡出加载
 	}
 
+	/**
+	 * URL资源加载
+	 * @param context
+	 * @param url
+	 * @param view
+	 */
 	public static void loadURLImage ( Context context, final String url, ImageView view )
 	{
 		Glide.with(context).load(url).crossFade().into(view);  //平滑淡出加载

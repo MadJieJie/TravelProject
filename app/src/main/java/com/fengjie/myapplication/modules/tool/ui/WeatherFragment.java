@@ -18,14 +18,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.fengjie.myapplication.R;
-import com.fengjie.myapplication.activity.view.MainActivity;
+import com.fengjie.myapplication.modules.MainActivity;
 import com.fengjie.myapplication.modules.tool.adapter.weather.WeatherAdapter;
-import com.fengjie.myapplication.modules.tool.base.weather.AbstractWeatherFragment;
+import com.fengjie.myapplication.modules.tool.base.weather.AbstractRetrofitFragment;
 import com.fengjie.myapplication.modules.tool.bean.Weather;
-import com.fengjie.myapplication.utils.RetrofitSingleton;
 import com.fengjie.myapplication.modules.tool.db.weather.SharedPreferenceUtil;
 import com.fengjie.myapplication.utils.LogUtils;
 import com.fengjie.myapplication.utils.ToastUtils;
+import com.fengjie.myapplication.utils.weather.RetrofitWeather;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.Observable;
@@ -38,7 +38,7 @@ import io.reactivex.disposables.Disposable;
  * @attention
  */
 
-public class WeatherFragment extends AbstractWeatherFragment
+public class WeatherFragment extends AbstractRetrofitFragment
 {
 
 	private RecyclerView mRecyclerView;
@@ -49,7 +49,7 @@ public class WeatherFragment extends AbstractWeatherFragment
 	private static Weather mWeather = new Weather();
 	private WeatherAdapter mAdapter;
 
-	private  static boolean mIsLoadData = false ;
+	private static boolean mIsLoadData = false;
 //	//声明AMapLocationClient类对象
 //	public AMapLocationClient mLocationClient = null;
 //	public AMapLocationClientOption mLocationOption = null;
@@ -78,15 +78,15 @@ public class WeatherFragment extends AbstractWeatherFragment
 	{
 		if ( view == null )
 		{
-			view = inflater.inflate(R.layout.content_main, container, false);
+			view = inflater.inflate(R.layout.fragment_weather, container, false);
 //			ButterKnife.bind(this, view);
 		}
 		mIsCreateView = true;
 
-		mRecyclerView = ( RecyclerView ) view.findViewById(R.id.recyclerview);
-		mRefreshLayout = ( SwipeRefreshLayout ) view.findViewById(R.id.swiprefresh);
-		mProgressBar = ( ProgressBar ) view.findViewById(R.id.progressBar);
-		mIvError = ( ImageView ) view.findViewById(R.id.iv_erro);
+		mRecyclerView = ( RecyclerView ) view.findViewById(R.id.content_rv_weather);
+		mRefreshLayout = ( SwipeRefreshLayout ) view.findViewById(R.id.fresh_rl_weather);
+		mProgressBar = ( ProgressBar ) view.findViewById(R.id.progress_pb_common);
+		mIvError = ( ImageView ) view.findViewById(R.id.error_iv_common);
 
 		LogUtils.d("WeatherFragment - onCreateView");
 		return view;
@@ -120,7 +120,7 @@ public class WeatherFragment extends AbstractWeatherFragment
 							load();
 						}
 					});
-			mIsLoadData = true ;
+			mIsLoadData = true;
 //		CheckVersion.checkVersion(getActivity());
 		}
 
@@ -131,7 +131,7 @@ public class WeatherFragment extends AbstractWeatherFragment
 	{
 		super.onCreate(savedInstanceState);
 
-//		RxBus.getDefault().toObservable(ChangeCityEvent.class).observeOn(AndroidSchedulers.mainThread()).subscribe(
+//		RxBus.get().wait(ChangeCityEvent.class).observeOn(AndroidSchedulers.mainThread()).subscribe(
 //				new SimpleSubscriber< ChangeCityEvent >()
 //				{
 //					@Override
@@ -149,6 +149,7 @@ public class WeatherFragment extends AbstractWeatherFragment
 	}
 
 
+
 	protected void initView ()
 	{
 		if ( mRefreshLayout != null )
@@ -159,7 +160,7 @@ public class WeatherFragment extends AbstractWeatherFragment
 					android.R.color.holo_orange_light,
 					android.R.color.holo_red_light);
 			mRefreshLayout.setOnRefreshListener(
-					() -> mRefreshLayout.postDelayed(this :: load, 1000));
+					() -> mRefreshLayout.postDelayed(() -> load(), 1000));
 		}
 
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -238,7 +239,7 @@ public class WeatherFragment extends AbstractWeatherFragment
 			@Override
 			public void onError ( Throwable e )
 			{
-				RetrofitSingleton.disposeFailureInfo(e);
+				RetrofitWeather.disposeFailureInfo(e);
 			}
 
 			@Override
@@ -256,7 +257,7 @@ public class WeatherFragment extends AbstractWeatherFragment
 	{
 		String cityName = SharedPreferenceUtil.getInstance().getCityName();
 //		String cityName = "jiashanxian";            /**查询嘉善县的天气(即西塘)*/
-		return RetrofitSingleton.getInstance()
+		return RetrofitWeather.getInstance()
 				       .fetchWeather(cityName)
 				       .compose(this.bindToLifecycle());   /**更新天气处*/
 	}

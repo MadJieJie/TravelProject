@@ -4,13 +4,13 @@
     android:layout_height="match_parent">
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/progress_pb_common"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
         android:visibility="gone"/>
     <ImageView
-        android:id="@+id/iv_erro"
+        android:id="@+id/error_iv_common"
         android:visibility="gone"
         android:layout_centerInParent="true"
         android:layout_width="100dp"

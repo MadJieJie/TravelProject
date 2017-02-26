@@ -21,6 +21,13 @@ public class RxUtils
 				                      .observeOn(AndroidSchedulers.mainThread());
 	}
 
+	public static < T > ObservableTransformer< T, T > schedulerHelper ()
+	{
+		return tObservable -> tObservable.subscribeOn(Schedulers.io())
+//				                      .unsubscribeOn(AndroidSchedulers.mainThread())
+				                      .observeOn(AndroidSchedulers.mainThread());
+	}
+
 
 	/**
 	 * 可自定义线程

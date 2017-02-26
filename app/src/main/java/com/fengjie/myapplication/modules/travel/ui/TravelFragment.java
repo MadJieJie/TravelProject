@@ -1,7 +1,5 @@
 package com.fengjie.myapplication.modules.travel.ui;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,11 +12,8 @@ import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.adapter.recyclerview.adapter.CommonAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.base.ViewHolder;
 import com.fengjie.myapplication.modules.tool.base.weather.AbstractFragment;
-import com.fengjie.myapplication.utils.ToastUtils;
 import com.fengjie.myapplication.view.DefinedMenu;
-import com.yalantis.contextmenu.lib.MenuObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,7 +46,7 @@ public class TravelFragment extends AbstractFragment
 		View view = inflater.inflate(R.layout.fragment_travel, container, false);
 		findView(view);
 		initView();
-		initMenu(getString(R.string.travel), getMenuObjects(), this, DefinedMenu.TITLE_MENU);
+		initMenu(getString(R.string.travel), DefinedMenu.TITLE_MENU);
 		return view;
 	}
 
@@ -80,44 +75,7 @@ public class TravelFragment extends AbstractFragment
 		mRecyclerView.setAdapter(mAdapter);
 	}
 
-	@Override
-	protected List< MenuObject > getMenuObjects ()
-	{
-		List< MenuObject > menuObjects = new ArrayList<>();
 
-		MenuObject close = new MenuObject();
-		close.setResource(R.mipmap.btn_close);
-
-
-		MenuObject send = new MenuObject("Send message");
-		send.setResource(R.mipmap.btn_add);
-
-		MenuObject like = new MenuObject("Like profile");
-		Bitmap b = BitmapFactory.decodeResource(getResources(), R.mipmap.btn_add);
-		like.setBitmap(b);
-
-		menuObjects.add(close);
-		menuObjects.add(send);
-		menuObjects.add(like);
-		return menuObjects;
-	}
-
-	@Override
-	public void onMenuItemClick ( View clickedView, int position )
-	{
-		switch ( position )
-		{
-			case AbstractFragment.FIRST:
-				ToastUtils.showShort(mContext, "close");
-				break;
-			case 1:
-				ToastUtils.showShort(mContext, "1");
-				break;
-			case 2:
-				ToastUtils.showShort(mContext, "2");
-				break;
-		}
-	}
 }
 
 

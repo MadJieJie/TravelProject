@@ -1,7 +1,5 @@
 package com.fengjie.myapplication.modules.tool.ui;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -13,12 +11,7 @@ import android.view.ViewGroup;
 import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.modules.run.adapter.HomePagerAdapter;
 import com.fengjie.myapplication.modules.tool.base.weather.AbstractFragment;
-import com.fengjie.myapplication.utils.ToastUtils;
 import com.fengjie.myapplication.view.DefinedMenu;
-import com.yalantis.contextmenu.lib.MenuObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Created by MadJieJie on 2017/1/31-21:49.
@@ -45,7 +38,8 @@ public class ToolFragment extends AbstractFragment
 	@Override
 	public View onCreateView ( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
 	{
-		mView = inflater.inflate(R.layout.fragment_tool, container, false);
+		if ( mView == null )
+			mView = inflater.inflate(R.layout.fragment_tool, container, false);
 
 		return mView;
 	}
@@ -55,7 +49,7 @@ public class ToolFragment extends AbstractFragment
 	{
 		super.onViewCreated(view, savedInstanceState);
 		findView(view);
-//		initMenu(getString(R.string.tool), getMenuObjects(), this, DefinedMenu.TAB_MENU);
+		initMenu(getString(R.string.tool), DefinedMenu.TAB_MENU);
 		initView();
 	}
 
@@ -76,10 +70,10 @@ public class ToolFragment extends AbstractFragment
 	{
 		HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getFragmentManager());
 		homePagerAdapter.addTab(new WeatherFragment(), getString(R.string.weather));
-		homePagerAdapter.addTab(new WeatherFragment(), getString(R.string.scenery));
+		homePagerAdapter.addTab(new SceneryFragment(), getString(R.string.scenery));
 		homePagerAdapter.addTab(new WeatherFragment(), getString(R.string.billBook));
 		mViewPager.setAdapter(homePagerAdapter);
-//		mMenu.setupWithViewPager(mViewPager);
+		mMenu.setupWithViewPager(mViewPager);
 //		mMenu.setLeftButtonListener(v -> {
 //
 //
@@ -93,47 +87,6 @@ public class ToolFragment extends AbstractFragment
 	{
 //		getFragmentManager().beginTransaction().replace(R.id.weatherContent_fl_tool, WeatherFragment.newInstance()).commit();       //must commit can effect
 		Log.d("Debug", "initFragment: ");
-	}
-
-
-
-	@Override
-	protected List< MenuObject > getMenuObjects ()
-	{
-		List< MenuObject > menuObjects = new ArrayList<>();
-
-		MenuObject close = new MenuObject();
-		close.setResource(R.mipmap.btn_close);
-
-
-		MenuObject send = new MenuObject("Send message");
-		send.setResource(R.mipmap.btn_add);
-
-		MenuObject like = new MenuObject("Like profile");
-		Bitmap b = BitmapFactory.decodeResource(getResources(), R.mipmap.btn_add);
-		like.setBitmap(b);
-
-		menuObjects.add(close);
-		menuObjects.add(send);
-		menuObjects.add(like);
-		return menuObjects;
-	}
-
-	@Override
-	public void onMenuItemClick ( View clickedView, int position )
-	{
-		switch ( position )
-		{
-			case 0:
-				ToastUtils.showShort(mContext, "close");
-				break;
-			case 1:
-				ToastUtils.showShort(mContext, "1");
-				break;
-			case 2:
-				ToastUtils.showShort(mContext, "2");
-				break;
-		}
 	}
 
 

@@ -1,6 +1,7 @@
 package com.fengjie.myapplication.view;
 
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -25,30 +26,29 @@ public class DefinedMenu extends PercentRelativeLayout
 	public DefinedMenu ( Context context, AttributeSet attrs )
 	{
 		super(context, attrs);
-		LayoutInflater.from(context).inflate(R.layout.view_title_menu, this);
 	}
 
-	public DefinedMenu initMenu ( Context context, final int model )
+	public DefinedMenu init ( Context context, final int model )
 	{
-//		switch ( model )
-//		{
-//			case TITLE_MENU:
-//				mView = LayoutInflater.from(context).inflate(R.layout.view_title_menu, this);       //传入需要加载的布局文件,传入父布局
-//				break;
-//			case TAB_MENU:
-//				mView = LayoutInflater.from(context).inflate(R.layout.view_tab_menu, this);       //传入需要加载的布局文件,传入父布局
-//				break;
-//			default:
-//				mView = LayoutInflater.from(context).inflate(R.layout.view_title_menu, this);       //传入需要加载的布局文件,传入父布局
-//				break;
-//		}
+		switch ( model )
+		{
+			case TITLE_MENU:
+				mView = LayoutInflater.from(context).inflate(R.layout.view_title_menu, this);       //传入需要加载的布局文件,传入父布局
+				break;
+			case TAB_MENU:
+				mView = LayoutInflater.from(context).inflate(R.layout.view_tab_menu, this);       //传入需要加载的布局文件,传入父布局
+				break;
+			default:
+				mView = LayoutInflater.from(context).inflate(R.layout.view_title_menu, this);       //传入需要加载的布局文件,传入父布局
+				break;
+		}
 		return this;
 	}
 
 
 	public DefinedMenu setupWithViewPager ( ViewPager viewPager )
 	{
-//		( ( TabLayout ) findViewById(R.id.tab_tabLayout_menu) ).setupWithViewPager(viewPager, false);
+		( ( TabLayout ) mView.findViewById(R.id.tab_tabLayout_menu) ).setupWithViewPager(viewPager, false);
 		return this;
 	}
 
@@ -59,7 +59,7 @@ public class DefinedMenu extends PercentRelativeLayout
 	 */
 	public DefinedMenu setLeftButtonListener ( View.OnClickListener onClickListener )
 	{
-		findViewById(R.id.left_btn_menu).setOnClickListener(onClickListener);
+		mView.findViewById(R.id.left_btn_menu).setOnClickListener(onClickListener);
 		return this;
 	}
 
@@ -70,7 +70,7 @@ public class DefinedMenu extends PercentRelativeLayout
 	 */
 	public DefinedMenu setRightButtonListener ( View.OnClickListener onClickListener )
 	{
-		findViewById(R.id.right_btn_menu).setOnClickListener(onClickListener);
+		mView.findViewById(R.id.right_btn_menu).setOnClickListener(onClickListener);
 		return this;
 	}
 
@@ -90,7 +90,7 @@ public class DefinedMenu extends PercentRelativeLayout
 	 */
 	public DefinedMenu setTitle ( String title )
 	{
-		( ( TextView ) findViewById(R.id.title_tv_menu) ).setText(title);
+		( ( TextView ) mView.findViewById(R.id.title_tv_menu) ).setText(title);
 		return this;
 	}
 
