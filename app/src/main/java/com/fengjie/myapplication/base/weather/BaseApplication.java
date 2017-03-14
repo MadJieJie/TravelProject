@@ -4,7 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.v7.app.AppCompatDelegate;
 
-import com.fengjie.myapplication.utils.weather.CrashHandler;
+import com.fengjie.myapplication.modules.tool.utils.weather.CrashHandler;
 
 
 public class BaseApplication extends Application

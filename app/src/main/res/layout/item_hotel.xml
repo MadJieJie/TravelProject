@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="8dp">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/scenery_rl_hotel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/view_iv_hotel"
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true" android:scaleType="centerCrop" android:src="#50000000"/>
+            <!--android:background="@mipmap/bg"/>-->
+            <TextView
+                android:id="@+id/title_tv_hotel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="can't find hotel's name"
+                android:textColor="@color/white"
+                android:textSize="25sp"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scenery_rl_hotel"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/money_tv_hotel"
+                style="@style/w_m_h_w"
+                android:text="未查询到价格"
+                android:textSize="22sp"/>
+            <TextView
+                android:id="@+id/satisfaction_tv_hotel"
+                style="@style/w_m_h_w"
+                android:text="未查询到满意度"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/address_tv_hotel"
+                style="@style/w_m_h_w"
+                android:text="未查询到地址"
+                android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/intro_tv_hotel"
+                style="@style/w_m_h_w"
+                android:text="未查询到简介"
+                android:textSize="12sp"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

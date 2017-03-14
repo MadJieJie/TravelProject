@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="PhotoPicker-0.8.4">
+    <CLASSES>
+      <root url="jar://D:/android/AndroidAvd/.android/build-cache/80aac9720e9ef0b38b6b878f32c021e5e1dfe41a/output/jars/classes.jar!/" />
+      <root url="file://D:/android/AndroidAvd/.android/build-cache/80aac9720e9ef0b38b6b878f32c021e5e1dfe41a/output/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

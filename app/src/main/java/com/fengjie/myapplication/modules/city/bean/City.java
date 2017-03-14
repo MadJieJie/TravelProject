@@ -8,4 +8,6 @@ public class City implements Serializable
     public String CityName;
     public int ProID;
     public int CitySort;
+    public int cityId;
+    public int provinceId;
 }

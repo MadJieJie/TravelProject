@@ -1,11 +1,8 @@
 <component name="libraryTable">
   <library name="fragmentation-">
-    <ANNOTATIONS>
-      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fragmentation/annotations.zip!/" />
-    </ANNOTATIONS>
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fragmentation/res" />
-      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/fragmentation/jars/classes.jar!/" />
+      <root url="jar://D:/android/AndroidAvd/.android/build-cache/b1f0ea93f977f83e45108d2f319e4eb255385606/output/jars/classes.jar!/" />
+      <root url="file://D:/android/AndroidAvd/.android/build-cache/b1f0ea93f977f83e45108d2f319e4eb255385606/output/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

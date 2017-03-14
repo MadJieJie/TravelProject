@@ -12,28 +12,27 @@ import android.widget.TextView;
 
 import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.modules.tool.bean.Weather;
-import com.fengjie.myapplication.utils.weather.ImageLoader;
-import com.fengjie.myapplication.modules.tool.db.weather.SharedPreferenceUtil;
-import com.fengjie.myapplication.utils.weather.Util;
+import com.fengjie.myapplication.modules.tool.utils.weather.ImageLoader;
+import com.fengjie.myapplication.utils.often.SharedPreferenceUtil;
+import com.fengjie.myapplication.utils.often.Utils;
 
-import butterknife.BindView;
 
 import static com.fengjie.myapplication.R.id.flu_brief;
 import static com.fengjie.myapplication.R.id.flu_txt;
 
 /**
  * @author Created by MadJieJie on 2017/1/31-21:49.
- * @brief  RecyclerViewµÄAdapter
- * @attention ±ØĞë×ª»»³ÉGBK,ÒòÎªURL¶Ë½ÓÊÕµÄÊÇÖĞÎÄ
+ * @brief  RecyclerViewçš„Adapter
+ * @attention å¿…é¡»è½¬æ¢æˆGBK,å› ä¸ºURLç«¯æ¥æ”¶çš„æ˜¯ä¸­æ–‡
  */
 
 public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHolder >
 {
-	private static String TAG = WeatherAdapter.class.getSimpleName();
+//	private static String TAG = WeatherAdapter.class.getSimpleName();
 
 	private Context mContext;
 	/**
-	 * ²ÎÊıÎªµÚ¼¸¸ö¿¨Æ¬
+	 * å‚æ•°ä¸ºç¬¬å‡ ä¸ªå¡ç‰‡
 	 */
 	private static final int TYPE_ONE = 0;
 	private static final int TYPE_TWO = 1;
@@ -48,7 +47,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 	}
 
 	/**
-	 * ·µ»Ø¿¨Æ¬Î»ÖÃ
+	 * è¿”å›å¡ç‰‡ä½ç½®
 	 * @param position
 	 * @return
 	 */
@@ -75,7 +74,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 	}
 
 	/**
-	 * ¶Ô²»Í¬µÄ¿¨Æ¬½øĞĞ²»Í¬µÄ ³ÖÓĞ
+	 * å¯¹ä¸åŒçš„å¡ç‰‡è¿›è¡Œä¸åŒçš„ æŒæœ‰
  * @param parent
 	 * @param viewType
 	 * @return
@@ -135,7 +134,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 	}
 
 	/**
-	 * µ±Ç°ÌìÆøÇé¿ö
+	 * å½“å‰å¤©æ°”æƒ…å†µ
 	 */
 	private class NowWeatherViewHolder extends BaseViewHolder< Weather >
 	{
@@ -171,14 +170,14 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 		{
 			try
 			{
-				tempFlu.setText(String.format("%s¡æ", weather.now.tmp));
+				tempFlu.setText(String.format("%sâ„ƒ", weather.now.tmp));
 				tempMax.setText(
-						String.format("¡ü %s ¡æ", weather.dailyForecast.get(0).tmp.max));
+						String.format("â†‘ %s â„ƒ", weather.dailyForecast.get(0).tmp.max));
 				tempMin.setText(
-						String.format("¡ı %s ¡æ", weather.dailyForecast.get(0).tmp.min));
+						String.format("â†“ %s â„ƒ", weather.dailyForecast.get(0).tmp.min));
 
-				tempPm.setText(String.format("PM2.5: %s ¦Ìg/m?", Util.safeText(weather.aqi.city.pm25)));
-				tempQuality.setText(Util.safeText("¿ÕÆøÖÊÁ¿£º ", weather.aqi.city.qlty));
+				tempPm.setText(String.format("PM2.5: %s Î¼g/m?", Utils.safeText(weather.aqi.city.pm25)));
+				tempQuality.setText(Utils.safeText("ç©ºæ°”è´¨é‡ï¼š ", weather.aqi.city.qlty));
 				ImageLoader.load(itemView.getContext(),
 						SharedPreferenceUtil.getInstance().getInt(weather.now.cond.txt, R.mipmap.none),
 						weatherIcon);
@@ -189,7 +188,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 	}
 
 	/**
-	 * µ±ÈÕĞ¡Ê±Ô¤¸æ
+	 * å½“æ—¥å°æ—¶é¢„å‘Š
 	 */
 	private class HoursWeatherViewHolder extends BaseViewHolder< Weather >
 	{
@@ -223,12 +222,12 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 				for ( int i = 0; i < weather.hourlyForecast.size(); i++ )
 				{
 					//s.subString(s.length-3,s.length);
-					//µÚÒ»¸ö²ÎÊıÊÇ¿ªÊ¼½ØÈ¡µÄÎ»ÖÃ£¬µÚ¶ş¸öÊÇ½áÊøÎ»ÖÃ¡£
+					//ç¬¬ä¸€ä¸ªå‚æ•°æ˜¯å¼€å§‹æˆªå–çš„ä½ç½®ï¼Œç¬¬äºŒä¸ªæ˜¯ç»“æŸä½ç½®ã€‚
 					String mDate = weather.hourlyForecast.get(i).date;
 					mClock[i].setText(
 							mDate.substring(mDate.length() - 5, mDate.length()));
 					mTemp[i].setText(
-							String.format("%s¡æ", weather.hourlyForecast.get(i).tmp));
+							String.format("%sâ„ƒ", weather.hourlyForecast.get(i).tmp));
 					mHumidity[i].setText(
 							String.format("%s%%", weather.hourlyForecast.get(i).hum)
 					);
@@ -243,25 +242,25 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 	}
 
 	/**
-	 * µ±ÈÕ½¨Òé
+	 * å½“æ—¥å»ºè®®
 	 */
 	private class SuggestionViewHolder extends BaseViewHolder< Weather >
 	{
-		@BindView ( R.id.cloth_brief )
+//		@BindView ( R.id.cloth_brief )
 		TextView clothBrief;
-		@BindView ( R.id.cloth_txt )
+//		@BindView ( R.id.cloth_txt )
 		TextView clothTxt;
-		@BindView ( R.id.sport_brief )
+//		@BindView ( R.id.sport_brief )
 		TextView sportBrief;
-		@BindView ( R.id.sport_txt )
+//		@BindView ( R.id.sport_txt )
 		TextView sportTxt;
-		@BindView ( R.id.travel_brief )
+//		@BindView ( R.id.travel_brief )
 		TextView travelBrief;
-		@BindView ( R.id.travel_txt )
+//		@BindView ( R.id.travel_txt )
 		TextView travelTxt;
-		@BindView ( flu_brief )
+//		@BindView ( flu_brief )
 		TextView fluBrief;
-		@BindView ( flu_txt )
+//		@BindView ( flu_txt )
 		TextView fluTxt;
 
 		SuggestionViewHolder ( View itemView )
@@ -281,16 +280,16 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 		{
 			try
 			{
-				clothBrief.setText(String.format("´©ÒÂÖ¸Êı---%s", weather.suggestion.drsg.brf));
+				clothBrief.setText(String.format("ç©¿è¡£æŒ‡æ•°---%s", weather.suggestion.drsg.brf));
 				clothTxt.setText(weather.suggestion.drsg.txt);
 
-				sportBrief.setText(String.format("ÔË¶¯Ö¸Êı---%s", weather.suggestion.sport.brf));
+				sportBrief.setText(String.format("è¿åŠ¨æŒ‡æ•°---%s", weather.suggestion.sport.brf));
 				sportTxt.setText(weather.suggestion.sport.txt);
 
-				travelBrief.setText(String.format("ÂÃÓÎÖ¸Êı---%s", weather.suggestion.trav.brf));
+				travelBrief.setText(String.format("æ—…æ¸¸æŒ‡æ•°---%s", weather.suggestion.trav.brf));
 				travelTxt.setText(weather.suggestion.trav.txt);
 
-				fluBrief.setText(String.format("¸ĞÃ°Ö¸Êı---%s", weather.suggestion.flu.brf));
+				fluBrief.setText(String.format("æ„Ÿå†’æŒ‡æ•°---%s", weather.suggestion.flu.brf));
 				fluTxt.setText(weather.suggestion.flu.txt);
 			} catch( Exception e )
 			{
@@ -299,7 +298,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 	}
 
 	/**
-	 * Î´À´ÌìÆø
+	 * æœªæ¥å¤©æ°”
 	 */
 	private class ForecastViewHolder extends BaseViewHolder< Weather >
 	{
@@ -328,7 +327,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 		{
 			try
 			{
-				//½ñÈÕ Ã÷ÈÕ
+				//ä»Šæ—¥ æ˜æ—¥
 				forecastDate[0].setText(mContext.getString(R.string.today));
 				forecastDate[1].setText(mContext.getString(R.string.tomorrow));
 				for ( int i = 0; i < weather.dailyForecast.size(); i++ )
@@ -338,7 +337,7 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 						try
 						{
 							forecastDate[i].setText(
-									Util.dayForWeek(weather.dailyForecast.get(i).date));
+									Utils.dayForWeek(weather.dailyForecast.get(i).date));
 						} catch( Exception e )
 						{
 						}
@@ -347,11 +346,11 @@ public class WeatherAdapter extends AnimRecyclerViewAdapter< RecyclerView.ViewHo
 							SharedPreferenceUtil.getInstance().getInt(weather.dailyForecast.get(i).cond.txtD, R.mipmap.none),
 							forecastIcon[i]);
 					forecastTemp[i].setText(
-							String.format("%s¡æ - %s¡æ",
+							String.format("%sâ„ƒ - %sâ„ƒ",
 									weather.dailyForecast.get(i).tmp.min,
 									weather.dailyForecast.get(i).tmp.max));
 					forecastTxt[i].setText(
-							String.format("%s¡£ %s %s %s km/h¡£ ½µË®¼¸ÂÊ %s%%¡£",
+							String.format("%sã€‚ %s %s %s km/hã€‚ é™æ°´å‡ ç‡ %s%%ã€‚",
 									weather.dailyForecast.get(i).cond.txtD,
 									weather.dailyForecast.get(i).wind.sc,
 									weather.dailyForecast.get(i).wind.dir,

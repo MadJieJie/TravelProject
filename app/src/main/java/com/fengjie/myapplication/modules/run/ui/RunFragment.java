@@ -8,9 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.fengjie.myapplication.R;
+import com.fengjie.myapplication.base.fragment.AbstractFragment;
 import com.fengjie.myapplication.modules.run.adapter.HomePagerAdapter;
-import com.fengjie.myapplication.modules.tool.base.weather.AbstractFragment;
 import com.fengjie.myapplication.modules.travel.ui.TravelFragment;
+import com.fengjie.myapplication.utils.often.LogUtils;
 import com.fengjie.myapplication.view.DefinedMenu;
 
 /**
@@ -21,48 +22,64 @@ import com.fengjie.myapplication.view.DefinedMenu;
 
 public class RunFragment extends AbstractFragment
 {
-
+	
 	private ViewPager mViewPager;
-
+	private View mView = null;
+	
 	public static RunFragment newInstance ()
 	{
 		Bundle args = new Bundle();
-
+		
 		RunFragment fragment = new RunFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
-
+	
 	@Nullable
 	@Override
 	public View onCreateView ( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
 	{
-		View view = inflater.inflate(R.layout.fragment_run, container, false);
-		findView(view);
-//		initMenu(getString(R.string.run),getMenuObjects(),this, DefinedMenu.TAB_MENU);
-		initView();
-		return view;
+		if(mView==null)
+		{
+			mView = inflater.inflate(R.layout.fragment_run, container, false);
+		}
+		return mView;
 	}
-
-
+	
+	
+	@Override
+	public void onResume ()
+	{
+		super.onResume();
+		LogUtils.d("color_str_run");
+	}
+	
+	@Override
+	public void onViewCreated ( View view, @Nullable Bundle savedInstanceState )
+	{
+		super.onViewCreated(view, savedInstanceState);
+		findView(mView);
+		initMenu(getString(R.string.travel), DefinedMenu.TAB_MENU);
+		initView();
+	}
+	
 	@Override
 	protected void findView ( View view )
 	{
 		mMenu = ( DefinedMenu ) view.findViewById(R.id.menu_view_run);
 		mViewPager = ( ViewPager ) view.findViewById(R.id.content_viewPager_run);
 	}
-
+	
 	@Override
 	protected void initView ()
 	{
 		HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getFragmentManager());
-		homePagerAdapter.addTab(TravelFragment.newInstance(),getString(R.string.hotel));
-		homePagerAdapter.addTab(TravelFragment.newInstance(),getString(R.string.memorandum));
+		homePagerAdapter.addTab(HotelFragment.newInstance(), getString(R.string.hotel));
+		homePagerAdapter.addTab(TravelFragment.newInstance(), getString(R.string.memorandum));
 		mViewPager.setAdapter(homePagerAdapter);
-//		mMenu.setupWithViewPager(mViewPager);
-
+		mMenu.setupWithViewPager(mViewPager);
 	}
-
+	
 }
 
 

@@ -12,16 +12,20 @@ import android.view.ViewGroup;
 
 import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.adapter.recyclerview.adapter.CommonAdapter;
+import com.fengjie.myapplication.adapter.recyclerview.adapter.MultiItemTypeAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.base.ViewHolder;
 import com.fengjie.myapplication.adapter.recyclerview.wrapper.EmptyWrapper;
-import com.fengjie.myapplication.base.fragment.IInitView;
-import com.fengjie.myapplication.base.scenery.SceneryConstant;
+import com.fengjie.myapplication.event.Event;
+import com.fengjie.myapplication.modules.tool.base.scenery.SceneryConstant;
 import com.fengjie.myapplication.modules.tool.base.weather.AbstractRetrofitFragment;
 import com.fengjie.myapplication.modules.tool.bean.Scenery;
-import com.fengjie.myapplication.utils.LogUtils;
-import com.fengjie.myapplication.utils.ToastUtils;
-import com.fengjie.myapplication.utils.scenery.RetrofitScenery;
-import com.fengjie.myapplication.utils.weather.ImageLoader;
+import com.fengjie.myapplication.utils.often.LogUtils;
+import com.fengjie.myapplication.utils.often.SharedPreferenceUtil;
+import com.fengjie.myapplication.utils.often.ToastUtils;
+import com.fengjie.myapplication.utils.often.Utils;
+import com.fengjie.myapplication.utils.rxbus.RxBus;
+import com.fengjie.myapplication.modules.tool.utils.scenery.RetrofitScenery;
+import com.fengjie.myapplication.modules.tool.utils.weather.ImageLoader;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
@@ -31,6 +35,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -39,27 +44,31 @@ import io.reactivex.disposables.Disposable;
  * @attention
  */
 
-public class SceneryFragment extends AbstractRetrofitFragment implements IInitView
+public class SceneryFragment extends AbstractRetrofitFragment
 {
-
+	
 	private RecyclerView mRecyclerView = null;
-	private List< Scenery.ResultBean > mDatas = new ArrayList< Scenery.ResultBean >();
-	private View mView = null;
+	private static List< Scenery.ResultBean > mDatas = new ArrayList< Scenery.ResultBean >();
 	private Context mContext = null;
 	private TwinklingRefreshLayout mTwinklingRefreshLayout;
-
+	
 	private CommonAdapter< Scenery.ResultBean > mAdapter = null;
 	private EmptyWrapper mEmptyWrapper = null;
-
+	
+	/**
+	 * å·¥å‚æ¨¡å¼
+	 *
+	 * @return è¿”å›æ–°çš„å®ä¾‹
+	 */
 	public static SceneryFragment newInstance ()
 	{
 		Bundle args = new Bundle();
-
+		
 		SceneryFragment fragment = new SceneryFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
-
+	
 	@Nullable
 	@Override
 	public View onCreateView ( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
@@ -68,104 +77,152 @@ public class SceneryFragment extends AbstractRetrofitFragment implements IInitVi
 		{
 			mView = inflater.inflate(R.layout.fragment_scenery, container, false);
 			mContext = getContext();
+			findView(mView);
 		}
-
+		mIsCreateView = true;
+		
 		return mView;
 	}
-
+	
 	@Override
 	public void onViewCreated ( View view, @Nullable Bundle savedInstanceState )
 	{
 		super.onViewCreated(view, savedInstanceState);
-		loadData();
-		findView(view);
-		initView();
+		
 		initRecycleView();
 		initRefreshLayout();
+		initRxBus();
 	}
-
+	
 	@Override
-	public void findView ( View view )
+	public void onDestroy ()
+	{
+		super.onDestroy();
+		RxBus.getInstance().unRegister(this);
+	}
+	
+	private void findView ( View view )
 	{
 		mRecyclerView = ( RecyclerView ) view.findViewById(R.id.content_rv_scenery);
 		mTwinklingRefreshLayout = ( TwinklingRefreshLayout ) view.findViewById(R.id.refresh_trl_scenery);
 	}
-
-
-	@Override
-	public void initView ()
+	
+	private void initRxBus ()
 	{
-		initRecycleView();
+		RxBus.getInstance()
+				.register(this)
+				.tObservable(Event.class)
+				.observeOn(AndroidSchedulers.mainThread())
+				.subscribe(
+						event ->
+						{
+							if ( event.getEvent() == Event.EVENT_CHANGE_CITY )
+							{
+								SceneryConstant.PAGE = 1;       //å°†é¡µæ•°ç½®ä¸º1
+								mDatas.clear(); //æ¸…é™¤æ‰€æœ‰å¯¹è±¡
+								lazyLoad();     //é‡æ–°å¯¼å…¥æ•°æ®
+							}
+							
+						}
+				);
 	}
-
+	
 	/**
-	 * ÀÁ¼ÓÔØ
+	 * æ‡’åŠ è½½
 	 */
 	@Override
 	protected void lazyLoad ()
 	{
-		loadData();
+		if ( mTwinklingRefreshLayout != null )
+			mTwinklingRefreshLayout.startRefresh();
 	}
 
-
+//	@Override
+//	protected void onFragmentVisibleChange ( boolean isVisible )
+//	{
+//		if ( isVisible )    //   do things when fragment is visible
+//		{
+////			mTwinklingRefreshLayout.startRefresh();
+////			initView();
+////			initRecycleView();
+////			initRefreshLayout();
+////			loadData();
+//		} else
+//		{
+////			mTwinklingRefreshLayout.finishRefreshing();
+//		}
+//	}
+	
+	/**
+	 * å¯¼å…¥æ™¯ç‚¹åˆ—è¡¨æ•°æ®
+	 */
 	private void loadData ()
 	{
-		getScenery(31, 385, SceneryConstant.PAGE, false)
-				.subscribe(new Observer< Scenery >()        /**¹Û²ìÕß**/
+		/**è§‚å¯Ÿè€…**/
+		getSceneryDataByNet(
+				SharedPreferenceUtil.getInstance().getCityProId(), SharedPreferenceUtil.getInstance().getCityId(), SceneryConstant.PAGE, false)
+				.subscribe(new Observer< Scenery >()
 				{
 					@Override
 					public void onSubscribe ( Disposable d )
 					{
-
+						
 					}
-
+					
 					@Override
 					public void onNext ( Scenery scenery )  //scenery must not null,because emitter can not send null object.
 					{
-
-						if ( scenery.result != null && !mDatas.retainAll(scenery.result))
+						
+						if ( scenery.result != null && ! mDatas.contains(scenery.result) )        //æˆç«‹æ¡ä»¶ï¼šè·å–æ•°æ®ä¸ä¸ºç©º&åŸæœ¬å®¹å™¨ä¸åŒ…å«ç°è·å–æ•°æ®
 						{
 							SceneryConstant.PAGE++;
 							LogUtils.d(scenery.result.get(0).address);
 							mDatas.addAll(scenery.result);
+							mEmptyWrapper.notifyDataSetChanged();
 						} else
 						{
-							ToastUtils.showShort(scenery.reason);
+							ToastUtils.showShort(mContext, scenery.reason);
 							LogUtils.d(scenery.reason);
 						}
 					}
-
+					
 					@Override
 					public void onError ( Throwable e )
 					{
 						LogUtils.d(e.toString());
 					}
-
+					
 					@Override
 					public void onComplete ()
 					{
-
+						ToastUtils.showShort(mContext, getString(R.string.addComplete));
 					}
 				});
 	}
-
+	
 	/**
-	 * ´ÓÍøÂç»ñÈ¡
+	 * ä»ç½‘ç»œè·å–æ™¯ç‚¹åˆ—è¡¨æ•°æ®
+	 *
+	 * @param proId    API need.
+	 * @param cityId   API need.
+	 * @param page     ç¬¬å‡ é¡µ
+	 * @param paybyvas æ˜¯å¦å¯†æ–‡
+	 * @return
 	 */
-	private Observable< Scenery > getScenery ( final int pid, final int cid, final int page, final boolean paybyvas )
+	private Observable< Scenery > getSceneryDataByNet ( final int proId, final int cityId, final int page, final boolean paybyvas )
 	{
-
+		
 		return RetrofitScenery.getInstance()
-				       .getScenery(pid, cid, page, paybyvas)
-				       .compose(this.bindToLifecycle());   /**¸üĞÂÌìÆø´¦*/
+				       .getScenery(proId, cityId, page, paybyvas)
+				       .compose(this.bindToLifecycle());   /**æ›´æ–°å¤©æ°”å¤„*/
 	}
-
+	
 	private void initRecycleView ()
 	{
-		/**ÉèÖÃRecyclerView´¹Ö±·ÅÖÃÄÚÈİ*/
+		/**è®¾ç½®RecyclerViewå‚ç›´æ”¾ç½®å†…å®¹*/
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-
+		
+		
 		mAdapter = new CommonAdapter< Scenery.ResultBean >(getActivity(), R.layout.item_scenery, mDatas)
 		{
 			@Override
@@ -175,58 +232,75 @@ public class SceneryFragment extends AbstractRetrofitFragment implements IInitVi
 				holder.setText(R.id.title_tv_scenery, info.title);
 			}
 		};
+		
+		mAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener()
+		{
+			@Override
+			public void onItemClick ( View view, RecyclerView.ViewHolder holder, int position )
+			{
+				String url = mDatas.get(position).url;
+				String title = mDatas.get(position).title;
+				LogUtils.d(url);
+				
+				/**build-WebView**/
+				
+				Utils.showWeb(mContext,title, url);
 
-//		mEmptyWrapper = new EmptyWrapper< Scenery.ResultBean >(mAdapter);
-//		mEmptyWrapper.setEmptyView(LayoutInflater.from(mContext).inflate(R.layout.view_empty, mRecyclerView, false));
-
-//		mLoadMoreWrapper = new LoadMoreWrapper(mEmptyWrapper);
-//		mLoadMoreWrapper.setLoadMoreView(LayoutInflater.from(mContext).inflate(R.layout.view_loading, mRecyclerView, false));
-//		mLoadMoreWrapper.setOnLoadMoreListener(() ->
-//		{
-//			new Handler().postDelayed(() ->
-//			{
-//				loadData();
-//				mLoadMoreWrapper.notifyDataSetChanged();            /**±ØĞë·ÅÔÚÏß³ÌÄÚ£¬·ÀÖ¹UIÎŞÏìÓ¦*/
-//			}, 1500);
-//		});
-
-//		mRecyclerView.setAdapter(mLoadMoreWrapper);
-		mRecyclerView.setAdapter(mAdapter);
-
-
+//				Intent intent = new Intent(mContext, WebActivity.class);
+//				intent.putExtra("URL",url);
+//				startActivity(intent);
+			}
+			
+			@Override
+			public boolean onItemLongClick ( View view, RecyclerView.ViewHolder holder, int position )
+			{
+				return false;
+			}
+		});
+		
+		mEmptyWrapper = new EmptyWrapper< Scenery.ResultBean >(mAdapter);
+		mEmptyWrapper.setEmptyView(LayoutInflater.from(mContext).inflate(R.layout.view_empty, mRecyclerView, false));
+		
+		mRecyclerView.setAdapter(mEmptyWrapper);
+		
+		
 	}
-
-	private void initRefreshLayout()
+	
+	/**
+	 * åˆå§‹åŒ–ä¸Šä¸‹æ‹‰åˆ·æ–°å¸ƒå±€
+	 */
+	private void initRefreshLayout ()
 	{
 		BezierLayout headerView = new BezierLayout(mContext);
 		mTwinklingRefreshLayout.setHeaderView(headerView);
 		mTwinklingRefreshLayout.setOverScrollBottomShow(false);
-
+		
 		mTwinklingRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter()
 		{
 			@Override
-			public void onRefresh ( TwinklingRefreshLayout refreshLayout )      //ÉÏÀ­¼àÌı
+			public void onRefresh ( TwinklingRefreshLayout refreshLayout )      //ä¸Šæ‹‰ç›‘å¬
 			{
 				super.onRefresh(refreshLayout);
-				new Handler().postDelayed(()->{
+				new Handler().postDelayed(() ->
+				{
 					loadData();
-					mAdapter.notifyDataSetChanged();
-					refreshLayout.finishRefreshing();
-				},1000);
+					refreshLayout.finishRefreshing();       //å…³é—­åˆ·æ–°å›¾æ ‡
+				}, 500);
 			}
-
+			
 			@Override
-			public void onLoadMore ( TwinklingRefreshLayout refreshLayout )     //ÏÂÀ­¼àÌı
+			public void onLoadMore ( TwinklingRefreshLayout refreshLayout )     //ä¸‹æ‹‰ç›‘å¬
 			{
 				super.onLoadMore(refreshLayout);
-				new Handler().postDelayed(()->{
+				new Handler().postDelayed(() ->
+				{
 					loadData();
-					mAdapter.notifyDataSetChanged();
 					refreshLayout.finishLoadmore();
-				},1000);
+				}, 500);
 			}
 		});
 	}
+	
 }
 
 

@@ -12,17 +12,16 @@ import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.adapter.recyclerview.adapter.CommonAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.adapter.MultiItemTypeAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.base.ViewHolder;
-import com.fengjie.myapplication.base.weather.WeatherConstant;
 import com.fengjie.myapplication.modules.city.bean.City;
 import com.fengjie.myapplication.modules.city.bean.Province;
+import com.fengjie.myapplication.modules.city.db.CityDB;
 import com.fengjie.myapplication.modules.city.db.DBManager;
-import com.fengjie.myapplication.modules.city.db.WeatherDB;
-import com.fengjie.myapplication.modules.tool.db.weather.CityORM;
-import com.fengjie.myapplication.modules.tool.db.weather.SharedPreferenceUtil;
-import com.fengjie.myapplication.utils.LogUtils;
-import com.fengjie.myapplication.utils.weather.OrmLite;
-import com.fengjie.myapplication.utils.weather.RxUtils;
-import com.fengjie.myapplication.utils.weather.Util;
+import com.fengjie.myapplication.event.Event;
+import com.fengjie.myapplication.utils.often.LogUtils;
+import com.fengjie.myapplication.utils.often.SharedPreferenceUtil;
+import com.fengjie.myapplication.utils.rxbus.RxBus;
+import com.fengjie.myapplication.modules.tool.utils.weather.RxUtils;
+import com.fengjie.myapplication.utils.often.Utils;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
@@ -34,61 +33,64 @@ import io.reactivex.schedulers.Schedulers;
 
 
 /**
- * Created by hugo on 2016/2/19 0019. todo 需要统一 Activity 退出的效果
+ * Created by hugo on 2016/2/19 0019.
+ * todo 需要统一 Activity 退出的效果
  */
 public class ChoiceCityActivity extends RxAppCompatActivity
 {
-
+	
 	private RecyclerView mRecyclerview;
 	private ProgressBar mProgressBar;
-
+	
 	private ArrayList< String > dataList = new ArrayList<>();
 	private Province selectedProvince;
-	private City selectedCity;
+//	private City selectedCity;
 	private List< Province > provincesList = new ArrayList<>();
 	private List< City > cityList;
 	private CommonAdapter mAdapter;
-
+	
 	public static final int LEVEL_PROVINCE = 1;
 	public static final int LEVEL_CITY = 2;
 	private int currentLevel;
-
-	private boolean isChecked = false;
-
-
+	
+//	private boolean isChecked = false;
+	
+	
 	@Override
 	protected void onCreate ( Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_choice_city);
-
-
+		
+		
 		initView();
-
+		
 		Observable
-				.defer(() -> {
+				.defer(() ->
+				{
 					//mDBManager = new DBManager(ChoiceCityActivity.this);
 					DBManager.getInstance().openDatabase();
 					return Observable.just(1);
 				})
 				.compose(RxUtils.rxSchedulerHelper())
 				.compose(this.bindToLifecycle())
-				.subscribe(integer -> {
+				.subscribe(integer ->
+				{
 					initRecyclerView();
 					queryProvinces();
 				});
-		Intent intent = getIntent();
-		isChecked = intent.getBooleanExtra(WeatherConstant.MULTI_CHECK, false);
-		if ( isChecked && SharedPreferenceUtil.getInstance().getBoolean("Tips", true) )
-		{
-			showTips();
-		}
+//		Intent intent = getIntent();
+//		isChecked = intent.getBooleanExtra(WeatherConstant.MULTI_CHECK, false);
+//		if ( isChecked && SharedPreferenceUtil.getInstance().getBoolean("Tips", true) )
+//		{
+//			showTips();
+//		}
 	}
-
+	
 	private void initView ()
 	{
-//		RxBus.get().register(this);     //RxBus注册
-
+		RxBus.getInstance().register(this);     //RxBus注册
+		
 		mRecyclerview = ( RecyclerView ) findViewById(R.id.recyclerview);
 		mProgressBar = ( ProgressBar ) findViewById(R.id.progress_pb_common);
 		if ( mProgressBar != null )
@@ -96,59 +98,68 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 			mProgressBar.setVisibility(View.VISIBLE);
 		}
 	}
-
+	
 	private void initRecyclerView ()
 	{
 		mRecyclerview.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerview.setHasFixedSize(true);
 		//mRecyclerview.setItemAnimator(new FadeInUpAnimator());
-		mAdapter = new CommonAdapter<String>(this, R.layout.item_city,dataList)
+		mAdapter = new CommonAdapter< String >(this, R.layout.item_city, dataList)
 		{
 			@Override
 			protected void convert ( ViewHolder holder, String info, int position )
 			{
-				holder.setText(R.id.item_city,info);
+				holder.setText(R.id.item_city, info);
 			}
 		};
-
+		
 		mAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener()
 		{
 			@Override
 			public void onItemClick ( View view, RecyclerView.ViewHolder holder, int position )
 			{
-				if ( currentLevel == LEVEL_PROVINCE )
+				if ( currentLevel == LEVEL_PROVINCE )       /**选择省份*/
 				{
 					selectedProvince = provincesList.get(position);
 					mRecyclerview.smoothScrollToPosition(0);
 					queryCities();
-				} else if ( currentLevel == LEVEL_CITY )
+				} else if ( currentLevel == LEVEL_CITY )        /**选择城市*/
 				{
-					String city = Util.replaceCity(cityList.get(position).CityName);     //获得改变的城市
-					if ( isChecked )
+					City city = cityList.get(position);
+					String cityName = Utils.replaceCity(cityList.get(position).CityName);     //更改原本城市的名字，去掉市等字体
+					/**用SharedPreference缓存cityID & provinceId*/
+					SharedPreferenceUtil.getInstance().setCityId(city.cityId);
+					SharedPreferenceUtil.getInstance().setCityProId(city.provinceId);
+					
+					LogUtils.d("API need :" + city.CityName);
+					LogUtils.d("API need :" + city.cityId);
+					LogUtils.d("API need :" + city.provinceId);
+
+//					if ( isChecked )
+//					{
+//						OrmLite.getInstance().save(new CityORM(cityName));
+////					RxBus.getDefault().post(new MultiUpdate());
+//						LogUtils.d("是多城市管理模式");
+//					} else
 					{
-						OrmLite.getInstance().save(new CityORM(city));
-//					RxBus.getDefault().post(new MultiUpdate());
-						LogUtils.d("是多城市管理模式");
-					} else
-					{
-						SharedPreferenceUtil.getInstance().setCityName(city);   //改变数据库内容
-//					RxBus.get().post(new ChangeCityEvent());                   //发出事件
+						SharedPreferenceUtil.getInstance().setCityName(cityName);   /**改变数据库内容*/
+						RxBus.getInstance().post(new Event(Event.EVENT_CHANGE_CITY));                   //RxBus.post  发出事件
 					}
 					quit();
 				}
 			}
-
+			
 			@Override
 			public boolean onItemLongClick ( View view, RecyclerView.ViewHolder holder, int position )
 			{
 				return false;
 			}
 		});
-
+		
 		mRecyclerview.setAdapter(mAdapter);
-
+		
 	}
-
+	
 	/**
 	 * 查询全国所有的省，从数据库查询
 	 */
@@ -160,7 +171,7 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 				{
 					if ( provincesList.isEmpty() )
 					{
-						provincesList.addAll(WeatherDB.loadProvinces(DBManager.getInstance().getDatabase()));
+						provincesList.addAll(CityDB.loadProvinces(DBManager.getInstance().getDatabase()));
 					}
 					dataList.clear();
 					return Observable.fromIterable(provincesList);
@@ -170,7 +181,8 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.compose(this.bindToLifecycle())
-				.doFinally(() -> {
+				.doFinally(() ->
+				{
 					currentLevel = LEVEL_PROVINCE;
 					mAdapter.notifyDataSetChanged();
 				})
@@ -179,7 +191,7 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 					dataList.addAll(strings);
 					mProgressBar.setVisibility(View.GONE);
 				});
-
+		
 	}
 
 //	@Override
@@ -206,7 +218,7 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 //		}
 //		return super.onOptionsItemSelected(item);
 //	}
-
+	
 	/**
 	 * 查询选中省份的所有城市，从数据库查询
 	 */
@@ -215,11 +227,11 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 //		getToolbar().setTitle("选择城市");
 		dataList.clear();
 		mAdapter.notifyDataSetChanged();
-
+		
 		Observable
 				.defer(() ->
 				{
-					cityList = WeatherDB.loadCities(DBManager.getInstance().getDatabase(), selectedProvince.ProSort);
+					cityList = CityDB.loadCities(DBManager.getInstance().getDatabase(), selectedProvince.ProSort);
 					return Observable.fromIterable(cityList);
 				})
 				.map(city -> city.CityName)
@@ -227,7 +239,8 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.compose(this.bindToLifecycle())
-				.doFinally(() -> {
+				.doFinally(() ->
+				{
 					currentLevel = LEVEL_CITY;
 					mAdapter.notifyDataSetChanged();
 					//定位到第一个item
@@ -238,9 +251,9 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 					dataList.addAll(strings);
 					mProgressBar.setVisibility(View.GONE);
 				});
-
+		
 	}
-
+	
 	@Override
 	public void onBackPressed ()
 	{
@@ -254,29 +267,26 @@ public class ChoiceCityActivity extends RxAppCompatActivity
 			mRecyclerview.smoothScrollToPosition(0);
 		}
 	}
-
+	
 	public static void launch ( Context context )
 	{
 		context.startActivity(new Intent(context, ChoiceCityActivity.class));
 	}
-
+	
 	@Override
 	protected void onDestroy ()
 	{
 		super.onDestroy();
 		DBManager.getInstance().closeDatabase();
-//		RxBus.get().unregister(this);   //销毁注册，防止内存泄露
+		RxBus.getInstance().unRegister(this);   //销毁注册，防止内存泄露
 	}
-
-	private void showTips ()
-	{
-//		new AlertDialog.Builder(this).setTitle("多城市管理模式").setMessage("您现在是多城市管理模式,直接点击即可新增城市.如果暂时不需要添加,"
-//				                                                             + "在右上选项中关闭即可像往常一样操作.\n因为 api 次数限制的影响,多城市列表最多三个城市.(๑′ᴗ‵๑)").setPositiveButton("明白", ( dialog, which ) -> dialog.dismiss()).setNegativeButton("不再提示", ( dialog, which ) -> SharedPreferenceUtil.getInstance().putBoolean("Tips", false)).show();
-	}
-
+	
+	/**
+	 * 退出界面
+	 */
 	private void quit ()
 	{
 		ChoiceCityActivity.this.finish();
-		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+		overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);//动画
 	}
 }

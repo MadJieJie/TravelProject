@@ -19,17 +19,20 @@ import android.widget.ProgressBar;
 
 import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.modules.MainActivity;
+import com.fengjie.myapplication.event.Event;
 import com.fengjie.myapplication.modules.tool.adapter.weather.WeatherAdapter;
 import com.fengjie.myapplication.modules.tool.base.weather.AbstractRetrofitFragment;
 import com.fengjie.myapplication.modules.tool.bean.Weather;
-import com.fengjie.myapplication.modules.tool.db.weather.SharedPreferenceUtil;
-import com.fengjie.myapplication.utils.LogUtils;
-import com.fengjie.myapplication.utils.ToastUtils;
-import com.fengjie.myapplication.utils.weather.RetrofitWeather;
+import com.fengjie.myapplication.utils.often.LogUtils;
+import com.fengjie.myapplication.utils.often.SharedPreferenceUtil;
+import com.fengjie.myapplication.utils.often.ToastUtils;
+import com.fengjie.myapplication.utils.rxbus.RxBus;
+import com.fengjie.myapplication.modules.tool.utils.weather.RetrofitWeather;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -40,117 +43,109 @@ import io.reactivex.disposables.Disposable;
 
 public class WeatherFragment extends AbstractRetrofitFragment
 {
-
-	private RecyclerView mRecyclerView;
-	private SwipeRefreshLayout mRefreshLayout;
-	private ProgressBar mProgressBar;
-	private ImageView mIvError;
-
+	
+	private RecyclerView mRecyclerView = null;
+	private SwipeRefreshLayout mRefreshLayout = null;
+	private ProgressBar mProgressBar = null;
+	private ImageView mIvError = null;
+	
 	private static Weather mWeather = new Weather();
-	private WeatherAdapter mAdapter;
+	private WeatherAdapter mAdapter = null;
+	private Context mContext = null;
 
-	private static boolean mIsLoadData = false;
-//	//ÉùÃ÷AMapLocationClientÀà¶ÔÏó
+//	å£°æ˜AMapLocationClientç±»å¯¹è±¡
 //	public AMapLocationClient mLocationClient = null;
 //	public AMapLocationClientOption mLocationOption = null;
-
-	private View view;
-
-
+	
+	
 	public static WeatherFragment newInstance ()
 	{
 		Bundle args = new Bundle();
-
+		
 		WeatherFragment fragment = new WeatherFragment();
 		fragment.setArguments(args);
 		return fragment;
 	}
-
+	
 	@Override
 	public void onAttach ( Context context )
 	{
 		super.onAttach(context);
 	}
-
+	
 	@Nullable
 	@Override
 	public View onCreateView ( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
 	{
-		if ( view == null )
+		if ( mView == null )
 		{
-			view = inflater.inflate(R.layout.fragment_weather, container, false);
-//			ButterKnife.bind(this, view);
+			mView = inflater.inflate(R.layout.fragment_weather, container, false);
+			mContext = getContext();
 		}
+		
 		mIsCreateView = true;
-
-		mRecyclerView = ( RecyclerView ) view.findViewById(R.id.content_rv_weather);
-		mRefreshLayout = ( SwipeRefreshLayout ) view.findViewById(R.id.fresh_rl_weather);
-		mProgressBar = ( ProgressBar ) view.findViewById(R.id.progress_pb_common);
-		mIvError = ( ImageView ) view.findViewById(R.id.error_iv_common);
-
+		
 		LogUtils.d("WeatherFragment - onCreateView");
-		return view;
+		return mView;
 	}
-
+	
 	@Override
 	public void onActivityCreated ( @Nullable Bundle savedInstanceState )
 	{
 		super.onActivityCreated(savedInstanceState);
-
+		
 	}
-
+	
 	@Override
 	public void onViewCreated ( View view, @Nullable Bundle savedInstanceState )
 	{
 		super.onViewCreated(view, savedInstanceState);
-		if ( mIsLoadData == false )
-		{
-			initIcon();
-			initView();
-//		// https://github.com/tbruyelle/RxPermissions
-			RxPermissions rxPermissions = new RxPermissions(getActivity());
-			rxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION)       //»ñÈ¡¶¨Î»È¨ÏŞ
-					.subscribe(granted -> {
-						if ( granted )      //»ñµÃÈ¨ÏŞ(Permission)
-						{
-							load();
-//						location();     //¶¨Î»
-						} else              //don't get
-						{
-							load();
-						}
-					});
-			mIsLoadData = true;
-//		CheckVersion.checkVersion(getActivity());
-		}
-
+		initIcon();             //å›¾æ ‡
+		findView();             //widgetè·å¾—å®ä¾‹
+		initView();             //åˆå§‹åŒ–widget
+		requestPermission();    //è¯·æ±‚æƒé™
 	}
-
+	
 	@Override
 	public void onCreate ( @Nullable Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-
-//		RxBus.get().wait(ChangeCityEvent.class).observeOn(AndroidSchedulers.mainThread()).subscribe(
-//				new SimpleSubscriber< ChangeCityEvent >()
-//				{
-//					@Override
-//					public void onNext ( ChangeCityEvent changeCityEvent )
-//					{
-//						if ( mRefreshLayout != null )
-//						{
-//							mRefreshLayout.setRefreshing(true);
-//						}
-//						load();
-//						PLog.d("MainRxBus");
-//					}
-//				});
-
+		initRxBus();
 	}
-
-
-
-	protected void initView ()
+	
+	@Override
+	public void onDestroyView ()
+	{
+		super.onDestroyView();
+	}
+	
+	@Override
+	public void onDestroy ()
+	{
+		super.onDestroy();
+//		mLocationClient = null;
+//		mLocationOption = null;
+	}
+	
+	/**
+	 * åŠ è½½æ•°æ®æ“ä½œ,åœ¨è§†å›¾åˆ›å»ºä¹‹å‰åˆå§‹åŒ–
+	 */
+	@Override
+	protected void lazyLoad ()
+	{
+//		load();
+	}
+	
+	
+	private void findView ()
+	{
+		mRecyclerView = ( RecyclerView ) mView.findViewById(R.id.content_rv_weather);
+		mRefreshLayout = ( SwipeRefreshLayout ) mView.findViewById(R.id.fresh_rl_weather);
+		mProgressBar = ( ProgressBar ) mView.findViewById(R.id.progress_pb_common);
+		mIvError = ( ImageView ) mView.findViewById(R.id.error_iv_common);
+	}
+	
+	private void initView ()
 	{
 		if ( mRefreshLayout != null )
 		{
@@ -160,54 +155,77 @@ public class WeatherFragment extends AbstractRetrofitFragment
 					android.R.color.holo_orange_light,
 					android.R.color.holo_red_light);
 			mRefreshLayout.setOnRefreshListener(
-					() -> mRefreshLayout.postDelayed(() -> load(), 1000));
+					() -> mRefreshLayout.postDelayed(() -> load(), 500));
 		}
-
+		
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mAdapter = new WeatherAdapter(mWeather);
 		mRecyclerView.setAdapter(mAdapter);
 	}
-
+	
+	/**
+	 * å½“åŸå¸‚å‘å‡ºæ›´æ–°äº‹ä»¶ï¼Œç«‹å³æ›´æ–°
+	 */
+	private void initRxBus ()
+	{
+		RxBus.getInstance().tObservable(Event.class).observeOn(AndroidSchedulers.mainThread()).subscribe(
+				event ->
+				{
+					if ( event.getEvent() == Event.EVENT_CHANGE_CITY )
+					{
+						mRefreshLayout.setRefreshing(true);
+						load();
+					}
+				}
+		);
+	}
+	
 	private void requestPermission ()
 	{
 		RxPermissions rxPermissions = new RxPermissions(getActivity());
-		rxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION)       //»ñÈ¡¶¨Î»È¨ÏŞ
-				.subscribe(granted -> {
-					if ( granted )      //»ñµÃÈ¨ÏŞ(Permission)
+//		rxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION)       //è·å–å®šä½æƒé™
+		rxPermissions.request(Manifest.permission.INTERNET)       //è·å–ç½‘ç»œæƒé™
+				.subscribe(granted ->
+				{
+					if ( granted )      //è·å¾—æƒé™(Permission)
 					{
 						load();
-						LogUtils.d("onActivityCreated - »ñµÃÈ¨ÏŞ");
-//						location();     //¶¨Î»
+						LogUtils.d("onActivityCreated - è·å¾—æƒé™");
+//						location();     //å®šä½
 					} else              //don't get
 					{
-						load();
-						LogUtils.d("onActivityCreated - Î´»ñÈ¨ÏŞ");
+//						load();
+						ToastUtils.showShort("æœªè·ç½‘ç»œæƒé™æƒé™");
+						LogUtils.d("onActivityCreated - æœªè·æƒé™");
 					}
 				});
 	}
-
+	
 	private void load ()
 	{
-		fetchDataByNetWork()
+		getWeatherDataByNet()
 //				.doOnRequest(new Action1< Long >()
 //				{
 //					@Override
 //					public void call ( Long aLong )
 //					{
-//						mRefreshLayout.setRefreshing(true);             //µ±ÇëÇóµÄÊ±ºò£¬ÏÔÊ¾¼ÓÔØÍ¼±ê
+//						mRefreshLayout.setRefreshing(true);             //å½“è¯·æ±‚çš„æ—¶å€™ï¼Œæ˜¾ç¤ºåŠ è½½å›¾æ ‡
 //					}
 //				})
-				.doOnError(throwable -> {
+				.doOnError(throwable ->
+				{
 					mIvError.setVisibility(View.VISIBLE);
 					mRecyclerView.setVisibility(View.GONE);
-					SharedPreferenceUtil.getInstance().setCityName("jiashanxian");
-					safeSetTitle("ÕÒ²»µ½³ÇÊĞÀ²");
+					SharedPreferenceUtil.getInstance().setCityName("æ¡‚æ—");
+					safeSetTitle("æ‰¾ä¸åˆ°åŸå¸‚å•¦");
 				})
-				.doOnNext(weather -> {
+				.doOnNext(weather ->
+				{
 					mIvError.setVisibility(View.GONE);
 					mRecyclerView.setVisibility(View.VISIBLE);
 				})
-				.doOnTerminate(() -> {
+				.doOnTerminate(() ->
+				{
 					mRefreshLayout.setRefreshing(false);
 					mProgressBar.setVisibility(View.GONE);
 				}).subscribe(new Observer< Weather >()
@@ -216,8 +234,8 @@ public class WeatherFragment extends AbstractRetrofitFragment
 			public void onSubscribe ( Disposable d )
 			{
 				mRefreshLayout.setRefreshing(true);
-			}   //µ±ÇëÇóµÄÊ±ºò£¬ÏÔÊ¾¼ÓÔØÍ¼±ê
-
+			}   //å½“è¯·æ±‚çš„æ—¶å€™ï¼Œæ˜¾ç¤ºåŠ è½½æ›´æ–°å›¾æ ‡
+			
 			@Override
 			public void onNext ( Weather weather )
 			{
@@ -232,116 +250,38 @@ public class WeatherFragment extends AbstractRetrofitFragment
 				safeSetTitle(weather.basic.city);
 				mAdapter.notifyDataSetChanged();
 				normalStyleNotification(weather);
-
+				
 				LogUtils.d(mWeather.now.tmp);
 			}
-
+			
 			@Override
 			public void onError ( Throwable e )
 			{
 				RetrofitWeather.disposeFailureInfo(e);
 			}
-
+			
 			@Override
 			public void onComplete ()
 			{
-				ToastUtils.showShort(getString(R.string.addComplete));
+				ToastUtils.showShort(mContext, getString(R.string.addComplete));
 			}
 		});
 	}
-
+	
 	/**
-	 * ´ÓÍøÂç»ñÈ¡
+	 * ä»ç½‘ç»œè·å–
 	 */
-	private Observable< Weather > fetchDataByNetWork ()
+	private Observable< Weather > getWeatherDataByNet ()
 	{
-		String cityName = SharedPreferenceUtil.getInstance().getCityName();
-//		String cityName = "jiashanxian";            /**²éÑ¯¼ÎÉÆÏØµÄÌìÆø(¼´Î÷ÌÁ)*/
+		String cityName = SharedPreferenceUtil.getInstance().getCityName();     //ä»SharedPreferenceè·å¾—æ•°æ®
 		return RetrofitWeather.getInstance()
 				       .fetchWeather(cityName)
-				       .compose(this.bindToLifecycle());   /**¸üĞÂÌìÆø´¦*/
+				       .compose(this.bindToLifecycle());   /**æ›´æ–°å¤©æ°”å¤„*/
 	}
-
-//	/**
-//	 * ¸ßµÂ¶¨Î»
-//	 */
-//	private void location ()
-//	{
-//		mRefreshLayout.setRefreshing(true);
-//		//³õÊ¼»¯¶¨Î»
-//		mLocationClient = new AMapLocationClient(BaseApplication.getAppContext());
-//		//ÉèÖÃ¶¨Î»»Øµ÷¼àÌı
-//		mLocationClient.setLocationListener(this);
-//		mLocationOption = new AMapLocationClientOption();
-//		//ÉèÖÃ¶¨Î»Ä£Ê½Îª¸ß¾«¶ÈÄ£Ê½£¬Battery_SavingÎªµÍ¹¦ºÄÄ£Ê½£¬Device_SensorsÊÇ½öÉè±¸Ä£Ê½
-//		mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
-//		//ÉèÖÃÊÇ·ñ·µ»ØµØÖ·ĞÅÏ¢£¨Ä¬ÈÏ·µ»ØµØÖ·ĞÅÏ¢£©
-//		mLocationOption.setNeedAddress(true);
-//		//ÉèÖÃÊÇ·ñÖ»¶¨Î»Ò»´Î,Ä¬ÈÏÎªfalse
-//		mLocationOption.setOnceLocation(false);
-//		//ÉèÖÃÊÇ·ñÇ¿ÖÆË¢ĞÂWIFI£¬Ä¬ÈÏÎªÇ¿ÖÆË¢ĞÂ
-//		mLocationOption.setWifiActiveScan(true);
-//		//ÉèÖÃÊÇ·ñÔÊĞíÄ£ÄâÎ»ÖÃ,Ä¬ÈÏÎªfalse£¬²»ÔÊĞíÄ£ÄâÎ»ÖÃ
-//		mLocationOption.setMockEnable(false);
-//		//ÉèÖÃ¶¨Î»¼ä¸ô µ¥Î»ºÁÃë
-//		int tempTime = SharedPreferenceUtil.getInstance().getAutoUpdate();
-//		if ( tempTime == 0 )
-//		{
-//			tempTime = 100;
-//		}
-//		mLocationOption.setInterval(tempTime * SharedPreferenceUtil.ONE_HOUR);
-//		//¸ø¶¨Î»¿Í»§¶Ë¶ÔÏóÉèÖÃ¶¨Î»²ÎÊı
-//		mLocationClient.setLocationOption(mLocationOption);
-//		//Æô¶¯¶¨Î»
-//		mLocationClient.startLocation();
-//	}
-
-//	@Override
-//	public void onLocationChanged ( AMapLocation aMapLocation )
-//	{
-//		if ( aMapLocation != null )
-//		{
-//			if ( aMapLocation.getErrorCode() == 0 )
-//			{
-//				//¶¨Î»³É¹¦»Øµ÷ĞÅÏ¢£¬ÉèÖÃÏà¹ØÏûÏ¢
-//				aMapLocation.getLocationType();//»ñÈ¡µ±Ç°¶¨Î»½á¹ûÀ´Ô´£¬ÈçÍøÂç¶¨Î»½á¹û£¬Ïê¼û¶¨Î»ÀàĞÍ±í
-//				SharedPreferenceUtil.getInstance().setCityName(Util.replaceCity(aMapLocation.getCity()));
-//			} else
-//			{
-//				if ( isAdded() )
-//				{
-//					ToastUtil.showShort(getString(R.string.errorLocation));
-//				}
-//			}
-//			load();
-//		}
-//	}
-
-	@Override
-	public void onDestroyView ()
-	{
-		super.onDestroyView();
-	}
-
-	@Override
-	public void onDestroy ()
-	{
-		super.onDestroy();
-//		mLocationClient = null;
-//		mLocationOption = null;
-	}
-
+	
+	
 	/**
-	 * ¼ÓÔØÊı¾İ²Ù×÷,ÔÚÊÓÍ¼´´½¨Ö®Ç°³õÊ¼»¯
-	 */
-	@Override
-	protected void lazyLoad ()
-	{
-
-	}
-
-	/**
-	 * ³õÊ¼»¯Í¨ÖªÀ¸
+	 * åˆå§‹åŒ–é€šçŸ¥æ 
 	 *
 	 * @param weather
 	 */
@@ -354,38 +294,38 @@ public class WeatherFragment extends AbstractRetrofitFragment
 		Notification.Builder builder = new Notification.Builder(getActivity());
 		Notification notification = builder.setContentIntent(pendingIntent)
 				                            .setContentTitle(weather.basic.city)
-				                            .setContentText(String.format("%s µ±Ç°ÎÂ¶È: %s¡æ ", weather.now.cond.txt, weather.now.tmp))
-				                            // ÕâÀï²¿·Ö ROM ÎŞ·¨³É¹¦
+				                            .setContentText(String.format("%s å½“å‰æ¸©åº¦: %sâ„ƒ ", weather.now.cond.txt, weather.now.tmp))
+				                            // è¿™é‡Œéƒ¨åˆ† ROM æ— æ³•æˆåŠŸ
 				                            .setSmallIcon(SharedPreferenceUtil.getInstance().getInt(weather.now.cond.txt, R.mipmap.none))
 				                            .build();
 		notification.flags = SharedPreferenceUtil.getInstance().getNotificationModel();
 		NotificationManager manager = ( NotificationManager ) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-		// tagºÍid¶¼ÊÇ¿ÉÒÔÄÃÀ´Çø·Ö²»Í¬µÄÍ¨ÖªµÄ
+		// tagå’Œidéƒ½æ˜¯å¯ä»¥æ‹¿æ¥åŒºåˆ†ä¸åŒçš„é€šçŸ¥çš„
 		manager.notify(1, notification);
 	}
-
+	
 	/**
-	 * ³õÊ¼»¯Icon,¼ÓÔØÍ¼Æ¬µ½SharedPreference.
+	 * åˆå§‹åŒ–Icon,åŠ è½½å›¾ç‰‡åˆ°SharedPreference.
 	 */
 	private void initIcon ()
 	{
 //		if ( SharedPreferenceUtil.getInstance().getIconType() == 0 )
 //		{
-		SharedPreferenceUtil.getInstance().putInt("Î´Öª", R.mipmap.none);
-		SharedPreferenceUtil.getInstance().putInt("Çç", R.mipmap.type_one_sunny);
-		SharedPreferenceUtil.getInstance().putInt("Òõ", R.mipmap.type_one_cloudy);
-		SharedPreferenceUtil.getInstance().putInt("¶àÔÆ", R.mipmap.type_one_cloudy);
-		SharedPreferenceUtil.getInstance().putInt("ÉÙÔÆ", R.mipmap.type_one_cloudy);
-		SharedPreferenceUtil.getInstance().putInt("Çç¼ä¶àÔÆ", R.mipmap.type_one_cloudytosunny);
-		SharedPreferenceUtil.getInstance().putInt("Ğ¡Óê", R.mipmap.type_one_light_rain);
-		SharedPreferenceUtil.getInstance().putInt("ÖĞÓê", R.mipmap.type_one_light_rain);
-		SharedPreferenceUtil.getInstance().putInt("´óÓê", R.mipmap.type_one_heavy_rain);
-		SharedPreferenceUtil.getInstance().putInt("ÕóÓê", R.mipmap.type_one_thunderstorm);
-		SharedPreferenceUtil.getInstance().putInt("À×ÕóÓê", R.mipmap.type_one_thunder_rain);
-		SharedPreferenceUtil.getInstance().putInt("ö²", R.mipmap.type_one_fog);
-		SharedPreferenceUtil.getInstance().putInt("Îí", R.mipmap.type_one_fog);
+		SharedPreferenceUtil.getInstance().putInt("æœªçŸ¥", R.mipmap.none);
+		SharedPreferenceUtil.getInstance().putInt("æ™´", R.mipmap.type_one_sunny);
+		SharedPreferenceUtil.getInstance().putInt("é˜´", R.mipmap.type_one_cloudy);
+		SharedPreferenceUtil.getInstance().putInt("å¤šäº‘", R.mipmap.type_one_cloudy);
+		SharedPreferenceUtil.getInstance().putInt("å°‘äº‘", R.mipmap.type_one_cloudy);
+		SharedPreferenceUtil.getInstance().putInt("æ™´é—´å¤šäº‘", R.mipmap.type_one_cloudytosunny);
+		SharedPreferenceUtil.getInstance().putInt("å°é›¨", R.mipmap.type_one_light_rain);
+		SharedPreferenceUtil.getInstance().putInt("ä¸­é›¨", R.mipmap.type_one_light_rain);
+		SharedPreferenceUtil.getInstance().putInt("å¤§é›¨", R.mipmap.type_one_heavy_rain);
+		SharedPreferenceUtil.getInstance().putInt("é˜µé›¨", R.mipmap.type_one_thunderstorm);
+		SharedPreferenceUtil.getInstance().putInt("é›·é˜µé›¨", R.mipmap.type_one_thunder_rain);
+		SharedPreferenceUtil.getInstance().putInt("éœ¾", R.mipmap.type_one_fog);
+		SharedPreferenceUtil.getInstance().putInt("é›¾", R.mipmap.type_one_fog);
 //		}
-
+		
 	}
 
 //	@Override
@@ -393,6 +333,61 @@ public class WeatherFragment extends AbstractRetrofitFragment
 //	{
 //
 //	}
+	
+	
+	//	/**
+//	 * é«˜å¾·å®šä½
+//	 */
+//	private void location ()
+//	{
+//		mRefreshLayout.setRefreshing(true);
+//		//åˆå§‹åŒ–å®šä½
+//		mLocationClient = new AMapLocationClient(BaseApplication.getAppContext());
+//		//è®¾ç½®å®šä½å›è°ƒç›‘å¬
+//		mLocationClient.setLocationListener(this);
+//		mLocationOption = new AMapLocationClientOption();
+//		//è®¾ç½®å®šä½æ¨¡å¼ä¸ºé«˜ç²¾åº¦æ¨¡å¼ï¼ŒBattery_Savingä¸ºä½åŠŸè€—æ¨¡å¼ï¼ŒDevice_Sensorsæ˜¯ä»…è®¾å¤‡æ¨¡å¼
+//		mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+//		//è®¾ç½®æ˜¯å¦è¿”å›åœ°å€ä¿¡æ¯ï¼ˆé»˜è®¤è¿”å›åœ°å€ä¿¡æ¯ï¼‰
+//		mLocationOption.setNeedAddress(true);
+//		//è®¾ç½®æ˜¯å¦åªå®šä½ä¸€æ¬¡,é»˜è®¤ä¸ºfalse
+//		mLocationOption.setOnceLocation(false);
+//		//è®¾ç½®æ˜¯å¦å¼ºåˆ¶åˆ·æ–°WIFIï¼Œé»˜è®¤ä¸ºå¼ºåˆ¶åˆ·æ–°
+//		mLocationOption.setWifiActiveScan(true);
+//		//è®¾ç½®æ˜¯å¦å…è®¸æ¨¡æ‹Ÿä½ç½®,é»˜è®¤ä¸ºfalseï¼Œä¸å…è®¸æ¨¡æ‹Ÿä½ç½®
+//		mLocationOption.setMockEnable(false);
+//		//è®¾ç½®å®šä½é—´éš” å•ä½æ¯«ç§’
+//		int tempTime = SharedPreferenceUtil.getInstance().getAutoUpdate();
+//		if ( tempTime == 0 )
+//		{
+//			tempTime = 100;
+//		}
+//		mLocationOption.setInterval(tempTime * SharedPreferenceUtil.ONE_HOUR);
+//		//ç»™å®šä½å®¢æˆ·ç«¯å¯¹è±¡è®¾ç½®å®šä½å‚æ•°
+//		mLocationClient.setLocationOption(mLocationOption);
+//		//å¯åŠ¨å®šä½
+//		mLocationClient.startLocation();
+//	}
 
-
+//	@Override
+//	public void onLocationChanged ( AMapLocation aMapLocation )
+//	{
+//		if ( aMapLocation != null )
+//		{
+//			if ( aMapLocation.getErrorCode() == 0 )
+//			{
+//				//å®šä½æˆåŠŸå›è°ƒä¿¡æ¯ï¼Œè®¾ç½®ç›¸å…³æ¶ˆæ¯
+//				aMapLocation.getLocationType();//è·å–å½“å‰å®šä½ç»“æœæ¥æºï¼Œå¦‚ç½‘ç»œå®šä½ç»“æœï¼Œè¯¦è§å®šä½ç±»å‹è¡¨
+//				SharedPreferenceUtil.getInstance().setCityName(Util.replaceCity(aMapLocation.getCity()));
+//			} else
+//			{
+//				if ( isAdded() )
+//				{
+//					ToastUtil.showShort(getString(R.string.errorLocation));
+//				}
+//			}
+//			load();
+//		}
+//	}
+	
 }

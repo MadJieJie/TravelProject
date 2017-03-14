@@ -3,8 +3,15 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
+
+        <item name="colorPrimary">@color/color_str_tool</item>
+        <item name="colorPrimaryDark">@color/color_str_tool</item>
+        <item name="colorAccent">@color/green</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
     <!--tool Activity-->
@@ -15,6 +22,16 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <!--register Activity-->
+    <style name="enter_ed_register">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@drawable/selector_bg_edit_login</item>
+        <item name="android:paddingBottom">2dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textCursorDrawable">@drawable/bg_input_cursor_login</item>
+        <item name="android:textSize">15sp</item>
+    </style>
 
 
     <!--start-屏幕设定-->
@@ -57,6 +74,10 @@
     <style name="w_0_h_0">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">0dp</item>
+    </style>
+    <style name="w_0_h_m">
+    <item name="android:layout_height">match_parent</item>
+    <item name="android:layout_width">0dp</item>
     </style>
     <style name="w_m_h_0">
         <item name="android:layout_width">match_parent</item>

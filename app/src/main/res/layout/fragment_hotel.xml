@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fengjie.percentlibrary.PercentRelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    style="@style/w_m_h_m"
+    android:background="@color/gray">
+
+
+    <!--layout_widthPercent、layout_heightPercent、-->
+    <!--layout_marginPercent、layout_marginLeftPercent、-->
+    <!--layout_marginTopPercent、layout_marginRightPercent、-->
+    <!--layout_marginBottomPercent、layout_marginStartPercent、layout_marginEndPercent。-->
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+        android:id="@+id/refresh_trl_hotel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:tr_wave_height="180dp">
+        <!--app:tr_head_height="100dp"-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/content_rv_hotel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/menu_view_travel">
+        </android.support.v7.widget.RecyclerView>
+
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+
+</com.fengjie.percentlibrary.PercentRelativeLayout>

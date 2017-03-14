@@ -20,6 +20,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_LOGS"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
 
 
     <application
@@ -30,6 +31,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <!--欢迎界面-->
         <activity
             android:name=".modules.MainActivity"
             android:launchMode="singleTask"
@@ -41,11 +43,48 @@
             </intent-filter>
         </activity>
 
+        <!--选择城市界面-->
         <activity
             android:name=".modules.city.ui.ChoiceCityActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".modules.user.ui.RegisterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
 
-    </application>
 
-</manifest>
+        <activity
+            android:name="com.thefinestartist.finestwebview.FinestWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="sensor"
+            android:theme="@style/FinestWebViewTheme.Light"/>
+
+        <!--android:label="@string/title_activity_new"-->
+
+        <activity
+            android:name=".modules.note.ui.NoteListActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name=".modules.note.ui.NewNoteActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".modules.note.ui.NoteActivity"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--图片选择器-->
+        <activity
+            android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+</application>
+
+    </manifest>

@@ -5,8 +5,9 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
 //        classpath 'me.tatarka:gradle-retrolambda:3.5.0' //加上这句依赖，这会使用retrolambda来编译Java代码
+//        retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:+'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -15,6 +16,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+//        apply plugin: 'me.tatarka.retrolambda'//我是添加的
     }
 }
 

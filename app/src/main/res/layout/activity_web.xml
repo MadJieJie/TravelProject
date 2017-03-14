@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.fengjie.percentlibrary.PercentRelativeLayout
+    style="@style/w_m_h_m" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <WebView
+        android:id="@+id/web_view_web"
+        style="@style/w_m_h_m">
+
+    </WebView>
+
+        <!--layout_widthPercent、layout_heightPercent、-->
+        <!--layout_marginPercent、layout_marginLeftPercent、-->
+        <!--layout_marginTopPercent、layout_marginRightPercent、-->
+        <!--layout_marginBottomPercent、layout_marginStartPercent、layout_marginEndPercent。-->
+
+    </com.fengjie.percentlibrary.PercentRelativeLayout>
+

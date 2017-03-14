@@ -8,10 +8,10 @@
     android:layout_alignParentTop="true"
     android:minHeight="?attr/actionBarSize">
 
-    <ImageButton
-        android:id="@+id/left_btn_menu"
-        style="@style/left_btn_menu"
-        android:layout_centerVertical="true"/>
+    <!--<ImageButton-->
+        <!--android:id="@+id/left_btn_menu"-->
+        <!--style="@style/left_btn_menu"-->
+        <!--android:layout_centerVertical="true"/>-->
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_tabLayout_menu"
@@ -23,14 +23,13 @@
         app:tabIndicatorHeight="2dp"
         app:tabTextColor="@color/bule"
         app:tabTextAppearance="@style/tabLayoutTextSize"
-        app:tabSelectedTextColor="@color/white"
-    />
+        app:tabSelectedTextColor="@color/white"/>
 
-    <ImageButton
-        android:id="@+id/right_btn_menu"
-        style="@style/right_btn_menu"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"/>
+    <!--<ImageButton-->
+        <!--android:id="@+id/right_btn_menu"-->
+        <!--style="@style/right_btn_menu"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_centerVertical="true"/>-->
 
 
 </RelativeLayout>

@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.base.weather.BaseApplication;
-import com.fengjie.myapplication.utils.LogUtils;
+import com.fengjie.myapplication.utils.often.LogUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

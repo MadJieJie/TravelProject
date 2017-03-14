@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.adapter.recyclerview.adapter.CommonAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.base.ViewHolder;
-import com.fengjie.myapplication.modules.tool.base.weather.AbstractFragment;
+import com.fengjie.myapplication.base.fragment.AbstractFragment;
 import com.fengjie.myapplication.view.DefinedMenu;
 
 import java.util.Arrays;
@@ -29,6 +29,7 @@ public class TravelFragment extends AbstractFragment
 	private RecyclerView mRecyclerView;
 	private List< String > mData = null;
 	private CommonAdapter< String > mAdapter;
+	private View mView;
 
 	public static TravelFragment newInstance ()
 	{
@@ -43,19 +44,29 @@ public class TravelFragment extends AbstractFragment
 	@Override
 	public View onCreateView ( LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState )
 	{
-		View view = inflater.inflate(R.layout.fragment_travel, container, false);
-		findView(view);
+		if(mView == null)
+		{
+			mView = inflater.inflate(R.layout.fragment_travel, container, false);
+//			Utils.setWindowStatusBarColor(getActivity(),R.color.color_str_travel);
+		}
+	
+		return mView;
+	}
+	
+	@Override
+	public void onViewCreated ( View view, @Nullable Bundle savedInstanceState )
+	{
+		super.onViewCreated(view, savedInstanceState);
+		findView(mView);
 		initView();
 		initMenu(getString(R.string.travel), DefinedMenu.TITLE_MENU);
-		return view;
 	}
-
-
+	
 	@Override
 	protected void findView ( View view )
 	{
-		mMenu = ( DefinedMenu ) view.findViewById(R.id.menu_view_travel);
-		mRecyclerView = ( RecyclerView ) view.findViewById(R.id.content_recyclerView_travel);
+		mMenu = ( DefinedMenu ) mView.findViewById(R.id.menu_view_travel);
+		mRecyclerView = ( RecyclerView ) mView.findViewById(R.id.content_recyclerView_travel);
 	}
 
 	@Override
