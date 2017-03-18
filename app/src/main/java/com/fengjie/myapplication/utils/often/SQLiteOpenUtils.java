@@ -1,4 +1,4 @@
-package com.fengjie.myapplication.modules.note.db;
+package com.fengjie.myapplication.utils.often;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,13 +15,13 @@ import java.util.Date;
  * 描述：数据库帮助类
  */
 
-public class MyOpenHelper extends SQLiteOpenHelper
+public class SQLiteOpenUtils extends SQLiteOpenHelper
 {
 	
-	private final static String DB_NAME = "note.db";// 数据库文件名
+	private final static String DB_NAME = "travel.db";// 数据库文件名
 	private final static int DB_VERSION = 1;// 数据库版本
 	
-	public MyOpenHelper ( Context context )
+	public SQLiteOpenUtils ( Context context )
 	{
 		super(context, DB_NAME, null, DB_VERSION);
 	}
@@ -40,6 +40,21 @@ public class MyOpenHelper extends SQLiteOpenHelper
 				           "n_update_time datetime )");
 		db.execSQL("insert into db_group(g_name, g_order, g_color, g_encrypt, g_create_time, g_update_time) " +
 				           "values(?,?,?,?,?,?)", new String[]{ "默认笔记", "1", "#FFFFFF", "0", DateUtils.date2string(new Date()), DateUtils.date2string(new Date()) });
+		
+		//创建TB_bill
+		db.execSQL("CREATE TABLE bill(id integer primary key autoincrement," +
+				           "date datetime NOT NULL," +
+				           "eat integer NOT NULL," +
+				           "traffic integer NOT NULL," +
+				           "buy integer NOT NULL," +
+				           "amusement integer NOT NULL," +
+				           "stay integer NOT NULL," +
+				           "ticket integer NOT NULL," +
+				           "treat integer NOT NULL," +
+				           "insurance integer NOT NULL," +
+				           "other integer NOT NULL" +
+				           ")");
+		
 	}
 	
 	@Override

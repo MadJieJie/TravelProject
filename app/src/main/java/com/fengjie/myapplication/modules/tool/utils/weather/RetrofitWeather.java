@@ -1,7 +1,7 @@
 package com.fengjie.myapplication.modules.tool.utils.weather;
 
 import com.fengjie.myapplication.BuildConfig;
-import com.fengjie.myapplication.base.weather.BaseApplication;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.base.weather.WeatherConstant;
 import com.fengjie.myapplication.modules.tool.bean.Weather;
 import com.fengjie.myapplication.modules.tool.db.weather.ApiInterface;

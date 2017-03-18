@@ -16,6 +16,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url "https://jitpack.io" }
 //        apply plugin: 'me.tatarka.retrolambda'//我是添加的
     }
 }

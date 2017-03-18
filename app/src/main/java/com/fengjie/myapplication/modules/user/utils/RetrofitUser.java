@@ -1,7 +1,7 @@
 package com.fengjie.myapplication.modules.user.utils;
 
 import com.fengjie.myapplication.BuildConfig;
-import com.fengjie.myapplication.base.weather.BaseApplication;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.modules.tool.db.weather.CityORM;
 import com.fengjie.myapplication.modules.user.bean.IUserAPI;
 import com.fengjie.myapplication.modules.user.bean.UserInfo;

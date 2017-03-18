@@ -33,6 +33,13 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="btn_rdbtn_bill">
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
 
     <!--start-屏幕设定-->
     <style name="w_f_h_f">

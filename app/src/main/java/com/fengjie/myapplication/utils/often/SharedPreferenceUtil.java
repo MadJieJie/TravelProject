@@ -4,7 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.fengjie.myapplication.base.weather.BaseApplication;
+import com.fengjie.myapplication.base.BaseApplication;
 
 
 /**

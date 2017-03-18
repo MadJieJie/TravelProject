@@ -28,4 +28,6 @@ public abstract class AbstractSimpleObserver<T> implements Observer<T>
 	{
 		ToastUtils.showShort("加载完毕，✺◟(∗❛ัᴗ❛ั∗)◞✺");
 	}
+	
+	
 }

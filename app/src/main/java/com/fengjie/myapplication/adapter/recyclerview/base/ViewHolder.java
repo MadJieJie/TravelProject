@@ -119,6 +119,7 @@ public class ViewHolder extends RecyclerView.ViewHolder
 		return this;
 	}
 	
+//	public ViewHolder setBackgroundRes ( int viewId, Drawable backgroundRes )
 	public ViewHolder setBackgroundRes ( int viewId, int backgroundRes )
 	{
 		View view = getView(viewId);

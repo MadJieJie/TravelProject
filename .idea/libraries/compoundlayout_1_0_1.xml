@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="compoundlayout-1.0.1">
+    <CLASSES>
+      <root url="jar://D:/android/AndroidAvd/.android/build-cache/ab0060a52e8ae21198be83d70a1cc2d61aee0e4a/output/jars/classes.jar!/" />
+      <root url="file://D:/android/AndroidAvd/.android/build-cache/ab0060a52e8ae21198be83d70a1cc2d61aee0e4a/output/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

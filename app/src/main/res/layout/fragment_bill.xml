@@ -1,21 +1,295 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<!--<android.support.design.widget.CoordinatorLayout-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:background="@color/gray"-->
+<!--android:fitsSystemWindows="true">-->
+
+
+<com.fengjie.percentlibrary.PercentRelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:background="@color/gray"
+    android:orientation="vertical">
+
+    <HorizontalScrollView
+        android:id="@+id/hsv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_heightPercent="15%"
+        app:layout_marginTopPercent="1%">
+
+
+        <com.jaouan.compoundlayout.RadioLayoutGroup
+            style="@style/w_m_h_m"
+            app:orientation="horizontal">
+
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/eat_rdl_bill"
+                style="@style/btn_rdbtn_bill">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_eat_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:padding="10dp"
+                    android:text="餐饮"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+
+            </com.jaouan.compoundlayout.RadioLayout>
+
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/traffic_rdl_bill"
+                style="@style/btn_rdbtn_bill"
+                app:checked="true">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_traffic_bill"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="交通"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+            </com.jaouan.compoundlayout.RadioLayout>
+
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/buy_rdl_bill"
+                style="@style/btn_rdbtn_bill">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_buy_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="购物"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+
+            </com.jaouan.compoundlayout.RadioLayout>
+
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/amusement_rdl_bill"
+                style="@style/btn_rdbtn_bill"
+                app:angle="45">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_amusement_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="娱乐"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+            </com.jaouan.compoundlayout.RadioLayout>
+
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/stay_rdl_bill"
+                style="@style/btn_rdbtn_bill"
+                app:angle="70">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_stay_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="住宿"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+            </com.jaouan.compoundlayout.RadioLayout>
+
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/ticket_rdl_bill"
+                style="@style/btn_rdbtn_bill"
+                app:angle="70">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_ticket_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="门票"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+            </com.jaouan.compoundlayout.RadioLayout>
+
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/treat_rdl_bill"
+                style="@style/btn_rdbtn_bill"
+                app:angle="70">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_treat_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="医疗"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+            </com.jaouan.compoundlayout.RadioLayout>
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/insurance_rdl_bill"
+                style="@style/btn_rdbtn_bill"
+                app:angle="70">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_insurance_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="保险"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+            </com.jaouan.compoundlayout.RadioLayout>
+            <com.jaouan.compoundlayout.RadioLayout
+                android:id="@+id/other_rdl_bill"
+                style="@style/btn_rdbtn_bill"
+                app:angle="70">
+
+                <ImageView
+                    style="@style/w_m_h_m"
+                    android:src="@mipmap/iv_other_bill"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="其他"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"/>
+
+            </com.jaouan.compoundlayout.RadioLayout>
+
+        </com.jaouan.compoundlayout.RadioLayoutGroup>
+
+    </HorizontalScrollView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/content_rv_bill"
+        style="@style/w_m_h_m"
+        android:layout_below="@+id/lv"
+        app:layout_marginTopPercent="2%"/>
 
     <com.fengjie.percentlibrary.PercentLinearLayout
+        android:id="@+id/lv"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/hsv"
+        android:orientation="vertical"
+        app:layout_heightPercent="18%">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/content_rv_bill"
-            style="@style/w_m_h_0"
-            app:layout_heightPercent="20%"
-            android:layout_below="@+id/tool_layout"/>
+        <android.support.v7.widget.CardView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/white"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_heightPercent="60%"
+            app:layout_marginPercent="1%"
+            card_view:cardElevation="1dp"
+        >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:padding="3dp">
+
+                <TextView
+                    style="@style/w_w_h_w"
+                    android:layout_centerVertical="true"
+                    android:text="金额(money)"
+                    android:textAllCaps="true"
+                    android:textSize="20sp"
+                    android:textStyle="italic"
+                />
+
+
+                <EditText
+                    android:id="@+id/money_et_bill"
+                    style="@style/w_m_h_w"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/iv"
+                    android:background="@null"
+                    android:gravity="right"
+                    android:hint="0.0"
+                    android:maxLength="7"
+                    android:numeric="decimal"
+                    android:singleLine="true"
+                    android:textAllCaps="true"
+                    android:textColor="@color/red"
+                    android:textColorHint="@color/red"
+                    android:textCursorDrawable="@null"
+                    android:textSize="18sp"
+                    android:textStyle="italic"/>
+
+
+                <ImageView
+                    android:id="@+id/iv"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/iv_skip_bill"/>
+
+
+            </RelativeLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <RelativeLayout
+            android:id="@+id/date_lv_bill"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white">
+            <TextView
+                android:id="@+id/date_tv_bill"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="2017-03-14"
+                android:textColor="@color/green"
+                android:textSize="18sp"/>
+            <ImageView
+                android:id="@+id/dropDown_iv_bill"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@+id/date_tv_bill"
+                android:src="@mipmap/iv_drop_down_bill"/>
+
+        </RelativeLayout>
 
     </com.fengjie.percentlibrary.PercentLinearLayout>
 
@@ -24,10 +298,114 @@
         android:id="@+id/add_fab_bill"
         android:layout_width="56dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
         app:fabSize="normal"
         app:srcCompat="@mipmap/btn_add"/>
 
+</com.fengjie.percentlibrary.PercentRelativeLayout>
 
-</android.support.design.widget.CoordinatorLayout>
+    <!--<android.support.v7.widget.CardView-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:background="@color/white"-->
+    <!--android:clickable="true"-->
+    <!--android:layout_marginLeft="5dp"-->
+    <!--android:layout_marginRight="5dp"-->
+    <!--android:foreground="?android:attr/selectableItemBackground"-->
+    <!--app:layout_heightPercent="35%"-->
+    <!--card_view:cardElevation="1dp"-->
+
+    <!--&gt;-->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="3dp">-->
+
+    <!--<TextView-->
+    <!--style="@style/w_w_h_w"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:text="备注(mark)"-->
+    <!--android:textAllCaps="true"-->
+    <!--android:textSize="20sp"-->
+    <!--android:textStyle="italic"/>-->
+
+    <!--<TextView-->
+    <!--style="@style/w_w_h_w"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_toLeftOf="@+id/iv3"-->
+    <!--android:text="未备注"-->
+    <!--android:textAllCaps="true"-->
+    <!--android:textColor="@color/red"-->
+    <!--android:textSize="20sp"-->
+    <!--android:textStyle="italic"/>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/iv3"-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:src="@mipmap/iv_skip_bill"/>-->
+
+    <!--</RelativeLayout>-->
+
+    <!--</android.support.v7.widget.CardView>-->
+
+    <!--</android.support.design.widget.CoordinatorLayout>-->
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:id="@+id/date_cv_bill"-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:card_view="http://schemas.android.com/apk/res-auto"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--app:layout_heightPercent="32%"-->
+    <!--android:background="@color/white"-->
+    <!--android:clickable="true"-->
+    <!--android:foreground="?android:attr/selectableItemBackground"-->
+    <!--app:layout_marginPercent="1.5%"-->
+    <!--card_view:cardElevation="1dp">-->
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:padding="3dp">-->
+
+    <!--<TextView-->
+    <!--style="@style/w_w_h_w"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:text="日期(date)"-->
+    <!--android:textAllCaps="true"-->
+    <!--android:textSize="20sp"-->
+    <!--android:textStyle="italic"/>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/date_tv_bill"-->
+    <!--style="@style/w_w_h_w"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_toLeftOf="@+id/iv2"-->
+    <!--android:text="2017-03-14"-->
+    <!--android:textAllCaps="true"-->
+    <!--android:textColor="@color/red"-->
+    <!--android:textSize="20sp" android:textStyle="italic"/>-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/iv2"-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:src="@mipmap/iv_skip_bill"/>-->
+
+    <!--</RelativeLayout>-->
+
+    <!--</android.support.v7.widget.CardView>-->

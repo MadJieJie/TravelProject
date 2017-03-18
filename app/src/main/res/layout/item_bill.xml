@@ -2,31 +2,67 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="80dp"
-    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:background="@color/white"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardCornerRadius="3dp"
-    card_view:cardElevation="6dp"
-android:background="@color/green">
+>
 
-    <LinearLayout
+    <com.fengjie.percentlibrary.PercentRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/green">
-        <!--android:background="#30000000"-->
-        <Button
-            android:id="@+id/name_btn_bill"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/green"
-            android:text="111"
-            android:textSize="16sp"
-            android:drawableTop="@mipmap/btn_add"
-            android:textCursorDrawable="@mipmap/btn_add"/>
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-    </LinearLayout>
+        <ImageView
+            android:id="@+id/type_iv_bill"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerHorizontal="true"/>
 
+        <TextView
+            android:id="@+id/type_tv_bill"
+            style="@style/w_w_h_w"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="5dp"
+            android:layout_toEndOf="@+id/type_iv_bill"
+            android:gravity="center_horizontal"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="italic"
+            tools:text="成都"/>
+
+        <TextView
+            style="@style/w_w_h_w"
+            android:layout_centerHorizontal="true"
+            android:layout_toStartOf="@+id/money_tv_bill"
+            android:textColor="@color/red"
+            android:textSize="25sp"
+            android:textStyle="italic"
+            tools:text="￥ "/>
+
+        <TextView
+            android:id="@+id/money_tv_bill"
+            style="@style/w_w_h_w"
+            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="10dp"
+            android:textAllCaps="true"
+            android:textColor="@color/red"
+            android:textSize="25sp"
+            android:textStyle="italic"
+            tools:text="金额"/>
+
+
+    </com.fengjie.percentlibrary.PercentRelativeLayout>
 
 </android.support.v7.widget.CardView>

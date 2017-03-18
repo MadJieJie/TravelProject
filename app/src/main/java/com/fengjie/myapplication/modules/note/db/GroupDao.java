@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.fengjie.myapplication.modules.note.bean.Group;
 import com.fengjie.myapplication.modules.note.utils.DateUtils;
+import com.fengjie.myapplication.utils.often.SQLiteOpenUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,12 +25,12 @@ import static android.content.ContentValues.TAG;
 
 public class GroupDao
 {
-	private MyOpenHelper helper;
+	private SQLiteOpenUtils helper;
 	private NoteDao noteDataDao;
 	
 	public GroupDao ( Context context )
 	{
-		helper = new MyOpenHelper(context);
+		helper = new SQLiteOpenUtils(context);
 		noteDataDao = new NoteDao(context);
 	}
 	

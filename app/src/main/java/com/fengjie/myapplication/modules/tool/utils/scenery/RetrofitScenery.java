@@ -1,7 +1,7 @@
 package com.fengjie.myapplication.modules.tool.utils.scenery;
 
 import com.fengjie.myapplication.BuildConfig;
-import com.fengjie.myapplication.base.weather.BaseApplication;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.modules.tool.bean.ISceneryAPI;
 import com.fengjie.myapplication.modules.tool.bean.Scenery;
 import com.fengjie.myapplication.modules.tool.db.weather.CityORM;

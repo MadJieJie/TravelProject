@@ -9,23 +9,20 @@ import android.database.sqlite.SQLiteStatement;
 
 import com.fengjie.myapplication.modules.note.bean.Note;
 import com.fengjie.myapplication.modules.note.utils.DateUtils;
+import com.fengjie.myapplication.utils.often.SQLiteOpenUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * 作者：Sendtion on 2016/10/24 0024 15:53
- * 邮箱：sendtion@163.com
- * 博客：http://sendtion.cn
- * 描述：笔记处理
+ * 笔记处理
  */
-
 public class NoteDao {
-    private MyOpenHelper helper;
+    private SQLiteOpenUtils helper;
 
     public NoteDao(Context context) {
-        helper = new MyOpenHelper(context);
+        helper = new SQLiteOpenUtils(context);
     }
 
     /**

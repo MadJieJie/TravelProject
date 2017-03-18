@@ -6,7 +6,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 
 import com.fengjie.myapplication.R;
-import com.fengjie.myapplication.base.weather.BaseApplication;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.utils.often.LogUtils;
 
 import java.io.File;

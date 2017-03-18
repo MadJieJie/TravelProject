@@ -3,7 +3,7 @@ package com.fengjie.myapplication.utils.often;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.fengjie.myapplication.base.weather.BaseApplication;
+import com.fengjie.myapplication.base.BaseApplication;
 
 
 /**

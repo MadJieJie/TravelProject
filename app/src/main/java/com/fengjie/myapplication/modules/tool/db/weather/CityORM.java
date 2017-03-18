@@ -6,11 +6,7 @@ import com.litesuits.orm.db.annotation.Table;
 import com.litesuits.orm.db.enums.AssignType;
 
 /**
- * Created by HugoXie on 16/7/24.
  *
- * Email: Hugo3641@gamil.com
- * GitHub: https://github.com/xcc3641
- * Info:
  */
 @Table ("weather_city")
 public class CityORM
