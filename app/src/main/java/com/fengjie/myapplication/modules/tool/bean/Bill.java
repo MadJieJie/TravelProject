@@ -8,6 +8,8 @@ package com.fengjie.myapplication.modules.tool.bean;
 
 public class Bill
 {
+	public static int EXIST_DATA = 0;
+	public static int NOT_EXIST_DATA = -1;
 	private int id;
 	private String date;
 	private int eat;
@@ -139,6 +141,10 @@ public class Bill
 	public Bill ( String date )
 	{
 		this.date = date;
+	}
+	public Bill (int id)
+	{
+		this.id = id;
 	}
 	
 	public Bill ()

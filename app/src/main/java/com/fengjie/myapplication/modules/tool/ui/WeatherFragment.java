@@ -18,17 +18,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.fengjie.myapplication.R;
-import com.fengjie.myapplication.modules.MainActivity;
+import com.fengjie.myapplication.base.AbstractRxPermissionEvent;
 import com.fengjie.myapplication.event.Event;
+import com.fengjie.myapplication.modules.MainActivity;
 import com.fengjie.myapplication.modules.tool.adapter.weather.WeatherAdapter;
 import com.fengjie.myapplication.modules.tool.base.weather.AbstractRetrofitFragment;
 import com.fengjie.myapplication.modules.tool.bean.Weather;
+import com.fengjie.myapplication.modules.tool.utils.weather.RetrofitWeather;
 import com.fengjie.myapplication.utils.often.LogUtils;
 import com.fengjie.myapplication.utils.often.SharedPreferenceUtil;
 import com.fengjie.myapplication.utils.often.ToastUtils;
+import com.fengjie.myapplication.utils.often.Utils;
 import com.fengjie.myapplication.utils.rxbus.RxBus;
-import com.fengjie.myapplication.modules.tool.utils.weather.RetrofitWeather;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -37,7 +38,7 @@ import io.reactivex.disposables.Disposable;
 
 /**
  * @author Created by MadJieJie on 2017/1/31-21:49.
- * @brief
+ * @brief 天气
  * @attention
  */
 
@@ -180,38 +181,30 @@ public class WeatherFragment extends AbstractRetrofitFragment
 		);
 	}
 	
+	/**
+	 * 请求权限
+	 */
 	private void requestPermission ()
 	{
-		RxPermissions rxPermissions = new RxPermissions(getActivity());
-//		rxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION)       //获取定位权限
-		rxPermissions.request(Manifest.permission.INTERNET)       //获取网络权限
-				.subscribe(granted ->
-				{
-					if ( granted )      //获得权限(Permission)
-					{
-						load();
-						LogUtils.d("onActivityCreated - 获得权限");
-//						location();     //定位
-					} else              //don't get
-					{
-//						load();
-						ToastUtils.showShort("未获网络权限权限");
-						LogUtils.d("onActivityCreated - 未获权限");
-					}
-				});
+		Utils.isGetRxPermission(getActivity(), new AbstractRxPermissionEvent()
+		{
+			@Override
+			public void canGetPermissionEvent ()
+			{
+				load();     /**从API获取数据通过适配器转换成界面*/
+			}
+			
+			@Override
+			public void notGetPermissionEvent ()
+			{
+				ToastUtils.showShort("未获网络权限权限");
+			}
+		},Manifest.permission.INTERNET);
 	}
 	
 	private void load ()
 	{
 		getWeatherDataByNet()
-//				.doOnRequest(new Action1< Long >()
-//				{
-//					@Override
-//					public void call ( Long aLong )
-//					{
-//						mRefreshLayout.setRefreshing(true);             //当请求的时候，显示加载图标
-//					}
-//				})
 				.doOnError(throwable ->
 				{
 					mIvError.setVisibility(View.VISIBLE);

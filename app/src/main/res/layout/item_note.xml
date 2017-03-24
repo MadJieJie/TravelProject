@@ -3,8 +3,8 @@
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:id="@+id/card_view_note"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    app:cardCornerRadius="3dp"
+                                    android:layout_height="150dp"
+                                    app:cardCornerRadius="5dp"
                                     app:cardElevation="1dp"
                                     app:cardPreventCornerOverlap="true"
                                     app:cardUseCompatPadding="true">
@@ -12,51 +12,79 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?android:attr/selectableItemBackground"
+        android:background="@color/white"
         android:padding="10dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题:"
+            android:textColor="@color/red"
+            android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/title_tv_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="标题"
-            android:textColor="@color/gray"
+            android:layout_toRightOf="@+id/title"
+            android:singleLine="true"
+            android:text="MadJieJie"
+            android:textColor="@color/black"
             android:textSize="18sp"/>
-
         <TextView
-            android:id="@+id/summary_tv_list"
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/title"
+            android:singleLine="true"
+            android:text="时间:"
+            android:textColor="@color/red"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/time_tv_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/title_tv_list"
-            android:layout_marginTop="5dp"
-            android:maxLines="2"
-            android:text="笔记摘要"
-            android:textColor="@color/gray"
-            android:textSize="18sp"/>
+            android:layout_toRightOf="@+id/time"
+            android:text="2017-03-20 02:22:00"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/summary_tv_list"
+            android:layout_below="@+id/time"
             android:layout_marginTop="5dp">
 
             <TextView
-                android:id="@+id/time_tv_list"
+                android:id="@+id/summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="时间"
-                android:textColor="@color/gray"
-                android:textSize="18sp"/>
+                android:layout_marginTop="5dp"
+                android:text="笔记摘要:"
+                android:textColor="@color/red"
+                android:textSize="20sp"/>
 
             <TextView
-                android:id="@+id/group_tv_list"
+                android:id="@+id/summary_tv_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="分类"
-                android:textColor="@color/gray"
-                android:textSize="18sp"/>
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/summary"
+                android:maxLines="2"
+                android:text="XXXXXXXX"
+                android:textColor="@color/black"
+                android:textSize="20sp"/>
+
+            <!--<TextView-->
+            <!--android:id="@+id/group_tv_list"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="分类"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="18sp"/>-->
         </RelativeLayout>
     </RelativeLayout>
 

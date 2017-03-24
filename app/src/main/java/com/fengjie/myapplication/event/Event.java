@@ -7,6 +7,7 @@ public class Event
 	public static final int EVENT_CHANGE_CITY = 1;      //发送改变城市标志位
 	public static final int EVENT_LOGIN_SUCCESS = 2;    //发送登入成功标志位
 	public static final int EVENT_UNREGISTER_USER = 3;  //发送注销标志位
+	public static final int EVENT_DOWNLOAD_TRAVEL_NOTE = 4 ;
 	
 	public Event ( int event )
 	{

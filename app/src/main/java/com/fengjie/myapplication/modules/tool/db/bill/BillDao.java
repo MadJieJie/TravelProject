@@ -19,7 +19,7 @@ public class BillDao
 {
 	private static SQLiteOpenUtils helper = new SQLiteOpenUtils(BaseApplication.getAppContext());         //需要该对象,才能对数据库进行操作
 	
-	private static final String SQL_QUERY_DATA_EXIST = "SELECT  date,eat,traffic,buy,amusement,stay,ticket,treat,insurance,other FROM bill WHERE date = ?";
+	private static final String SQL_QUERY_DATA_EXIST = "SELECT  id,date,eat,traffic,buy,amusement,stay,ticket,treat,insurance,other FROM bill WHERE date = ?";
 	private static final String SQL_INSERT_DATA = "INSERT INTO bill (date,eat,traffic,buy,amusement,stay,ticket,treat,insurance,other) VALUES(?,?,?,?,?,?,?,?,?,?)";
 	private static final String SQL_UPDATE_DATA = "UPDATE  bill set " +
 			                                              "eat= ?,traffic= ?,buy= ?,amusement= ?,stay= ?,ticket= ?,treat= ?,insurance= ?,other= ? " +
@@ -35,23 +35,24 @@ public class BillDao
 	{
 		SQLiteDatabase db = helper.getWritableDatabase();
 		Cursor cursor = null;
+		Bill bill = new Bill();
 		
 		try
 		{
 			cursor = db.rawQuery(SQL_QUERY_DATA_EXIST, new String[]{ date });
 			while ( cursor.moveToNext() )
 			{
-				Bill bill = new Bill();
-//				bill.setDate(cursor.getString(cursor.getColumnIndex("date")));
+				bill.setId(cursor.getInt(cursor.getColumnIndex("id")));
+				bill.setDate(cursor.getString(cursor.getColumnIndex("date")));
 				bill.setEat(cursor.getInt(cursor.getColumnIndex("eat")));
 				bill.setTraffic(cursor.getInt(cursor.getColumnIndex("traffic")));
 				bill.setBuy(cursor.getInt(cursor.getColumnIndex("buy")));
 				bill.setAmusement(cursor.getInt(cursor.getColumnIndex("amusement")));
 				bill.setStay(cursor.getInt(cursor.getColumnIndex("stay")));
 				bill.setTicket(cursor.getInt(cursor.getColumnIndex("ticket")));
+				bill.setTicket(cursor.getInt(cursor.getColumnIndex("treat")));
 				bill.setInsurance(cursor.getInt(cursor.getColumnIndex("insurance")));
 				bill.setOther(cursor.getInt(cursor.getColumnIndex("other")));
-				return bill;
 			}
 			
 		} catch( SQLException e )
@@ -66,7 +67,7 @@ public class BillDao
 				db.close();
 		}
 		
-		return null;
+		return bill;
 	}
 	
 	/**

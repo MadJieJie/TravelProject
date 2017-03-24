@@ -3,22 +3,27 @@ package com.fengjie.myapplication.modules.user.utils;
 import com.fengjie.myapplication.BuildConfig;
 import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.modules.tool.db.weather.CityORM;
+import com.fengjie.myapplication.modules.tool.utils.weather.OrmLite;
+import com.fengjie.myapplication.modules.tool.utils.weather.RxUtils;
+import com.fengjie.myapplication.modules.travel.bean.TravelNote;
+import com.fengjie.myapplication.modules.travel.db.TravelNoteDao;
+import com.fengjie.myapplication.modules.user.base.Biz;
 import com.fengjie.myapplication.modules.user.bean.IUserAPI;
 import com.fengjie.myapplication.modules.user.bean.UserInfo;
 import com.fengjie.myapplication.utils.often.LogUtils;
 import com.fengjie.myapplication.utils.often.ToastUtils;
-import com.fengjie.myapplication.modules.tool.utils.weather.OrmLite;
-import com.fengjie.myapplication.modules.tool.utils.weather.RxUtils;
 import com.fengjie.myapplication.utils.often.Utils;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.litesuits.orm.db.assit.WhereBuilder;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.functions.Function;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -186,6 +191,14 @@ public class RetrofitUser
 		
 	}
 	
+	/**
+	 * 获得登入的结果
+	 *
+	 * @param biz
+	 * @param account
+	 * @param password
+	 * @return
+	 */
 	public Observable< UserInfo > getLoginResult ( final String biz, final String account, final String password )
 	{
 		
@@ -213,6 +226,95 @@ public class RetrofitUser
 						});
 			}
 		}).compose(RxUtils.rxSchedulerHelper());
+		
+	}
+	
+	/**
+	 * 上传Note对象
+	 *
+	 * @param biz
+	 * @param json
+	 * @return
+	 */
+	public Observable< Biz > getUploaResult ( final String biz, final String json )
+	{
+		
+		return Observable.create(new ObservableOnSubscribe< Biz >()
+		{
+			@Override
+			public void subscribe ( ObservableEmitter< Biz > e ) throws Exception
+			{
+				sApiService.uploadNote(biz, json)
+						.enqueue(new Callback< Biz >()
+						{
+							@Override
+							public void onResponse ( Call< Biz > call, retrofit2.Response< Biz > response )
+							{
+								if ( response.isSuccessful() )
+									e.onNext(response.body());
+							}
+							
+							@Override
+							public void onFailure ( Call< Biz > call, Throwable t )
+							{
+								ToastUtils.showShort("请求网络失败");
+								LogUtils.e(t.toString());
+							}
+						});
+			}
+		}).compose(RxUtils.rxSchedulerHelper());
+		
+	}
+	
+	
+	/**
+	 * 下载用户的所有日志
+	 *
+	 * @param biz
+	 * @return
+	 */
+	public Observable< Biz > getUserResult ( final String biz, final int fk_user_uid )
+	{
+		
+		return Observable
+				       .create(new ObservableOnSubscribe< List< TravelNote > >()
+				       {
+					       @Override
+					       public void subscribe ( ObservableEmitter< List< TravelNote > > e ) throws Exception
+					       {
+						       sApiService
+								       .getUserAllNote(biz, fk_user_uid)
+								       .enqueue(new Callback< List< TravelNote > >()
+								       {
+									       @Override
+									       public void onResponse ( Call< List< TravelNote > > call, retrofit2.Response< List< TravelNote > > response )
+									       {
+										
+										       if ( response.isSuccessful() )
+											       e.onNext(response.body());
+									       }
+									
+									       @Override
+									       public void onFailure ( Call< List< TravelNote > > call, Throwable t )
+									       {
+										       ToastUtils.showShort("请求网络失败");
+										       LogUtils.e(t.toString());
+									       }
+								       });
+					       }
+				       })
+				       .compose(RxUtils.rxSchedulerHelper())
+				       .map(new Function< List< TravelNote >, Biz >()
+				       {
+					       @Override
+					       public Biz apply ( List< TravelNote > noteList ) throws Exception
+					       {
+						       if ( TravelNoteDao.insertDataToDB(noteList) )
+							       return new Biz("success", "null");
+						       else
+							       return new Biz("fail", "data error");
+					       }
+				       });
 		
 	}
 	

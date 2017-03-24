@@ -1,6 +1,7 @@
 
 package com.fengjie.myapplication.base.fragment;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,9 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.fengjie.myapplication.R;
+import com.fengjie.myapplication.base.AbstractRxPermissionEvent;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.event.Event;
 import com.fengjie.myapplication.modules.city.ui.ChoiceCityActivity;
-import com.fengjie.myapplication.modules.note.ui.NoteListActivity;
+import com.fengjie.myapplication.modules.run.ui.NewNoteActivity;
+import com.fengjie.myapplication.modules.travel.ui.NewTravelNoteActivity;
+import com.fengjie.myapplication.utils.often.Utils;
 import com.fengjie.myapplication.utils.rxbus.RxBus;
 
 /**
@@ -62,15 +67,44 @@ public class MenuListFragment extends Fragment
 						} else if ( item.getItemId() == R.id.menu_quit )
 						{
 							getActivity().finish();
-						} else if ( item.getItemId() == R.id.menu_unregister )
+						} else if ( item.getItemId() == R.id.menu_unregister )      //注销
 						{
+							BaseApplication.sUserName = "anonymity";
 							RxBus.getInstance()
 									.post(new Event(Event.EVENT_UNREGISTER_USER));
-						} else if ( item.getItemId() == R.id.menu_writeNote )
+						} else if ( item.getItemId() == R.id.menu_writeNote )       //写备忘
 						{
-							startActivity(new Intent(getContext(), NoteListActivity.class));
+							Utils.isGetRxPermission(getActivity(), new AbstractRxPermissionEvent()
+							{
+								@Override
+								public void canGetPermissionEvent ()
+								{
+									startActivity(new Intent(getContext(), NewNoteActivity.class));
+								}
+								
+								@Override
+								public void notGetPermissionEvent ()
+								{
+									
+								}
+							}, Manifest.permission.WRITE_EXTERNAL_STORAGE);     //若获得写入权限,则实现跳转
+						} else if ( item.getItemId() == R.id.menu_writeTravelNote ) //写游记
+						{
+							Utils.isGetRxPermission(getActivity(), new AbstractRxPermissionEvent()
+							{
+								@Override
+								public void canGetPermissionEvent ()
+								{
+									startActivity(new Intent(getContext(), NewTravelNoteActivity.class));
+								}
+								
+								@Override
+								public void notGetPermissionEvent ()
+								{
+									
+								}
+							}, Manifest.permission.WRITE_EXTERNAL_STORAGE);     //若获得写入权限,则实现跳转
 						}
-						
 						return false;
 					}
 			);

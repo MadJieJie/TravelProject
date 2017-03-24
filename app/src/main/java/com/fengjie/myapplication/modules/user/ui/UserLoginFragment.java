@@ -1,6 +1,5 @@
 package com.fengjie.myapplication.modules.user.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,13 +11,16 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.fengjie.myapplication.R;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.base.fragment.AbstractFragment;
 import com.fengjie.myapplication.event.Event;
 import com.fengjie.myapplication.modules.user.bean.UserInfo;
 import com.fengjie.myapplication.modules.user.utils.RetrofitUser;
 import com.fengjie.myapplication.utils.often.AbstractSimpleObserver;
 import com.fengjie.myapplication.utils.often.CircularAnimUtil;
+import com.fengjie.myapplication.utils.often.LogUtils;
 import com.fengjie.myapplication.utils.often.ToastUtils;
+import com.fengjie.myapplication.utils.often.Utils;
 import com.fengjie.myapplication.utils.rxbus.RxBus;
 import com.fengjie.myapplication.view.DefinedMenu;
 
@@ -34,7 +36,6 @@ public class UserLoginFragment extends AbstractFragment
 {
 	
 	private View mView = null;
-	private Context mContext = null;
 	
 	/** widget */
 	private EditText mAccount_et = null;
@@ -67,17 +68,8 @@ public class UserLoginFragment extends AbstractFragment
 		if ( mView == null )
 		{
 			mView = inflater.inflate(R.layout.fragment_login, container, false);
-			
-			
-			mAccount_et = ( EditText ) mView.findViewById(R.id.account_et_user);
-			mPassword_et = ( EditText ) mView.findViewById(R.id.password_et_user);
-			mRegister_fab = ( FloatingActionButton ) mView.findViewById(R.id.fab_register_user);
-			mLogin_btn = ( Button ) mView.findViewById(R.id.login_btn_user);
-			mContext = getContext();
 		}
-
-//		findView(view);
-//		initMenu(getString(R.string.user),getMenuObjects(),this);
+		
 		return mView;
 	}
 	
@@ -85,6 +77,7 @@ public class UserLoginFragment extends AbstractFragment
 	public void onViewCreated ( View view, @Nullable Bundle savedInstanceState )
 	{
 		super.onViewCreated(view, savedInstanceState);
+		findView(mView);
 		initView();
 	}
 	
@@ -92,22 +85,24 @@ public class UserLoginFragment extends AbstractFragment
 	public void onDestroy ()
 	{
 		super.onDestroy();
-		RxBus.getInstance().unRegister(this);
+//		RxBus.getInstance().unRegister(this);
 	}
 	
 	@Override
 	protected void findView ( View view )
 	{
 		mMenu = ( DefinedMenu ) mView.findViewById(R.id.menu_view_user);
+		mAccount_et = ( EditText ) mView.findViewById(R.id.account_et_user);
+		mPassword_et = ( EditText ) mView.findViewById(R.id.password_et_user);
+		mRegister_fab = ( FloatingActionButton ) mView.findViewById(R.id.fab_register_user);
+		mLogin_btn = ( Button ) mView.findViewById(R.id.login_btn_user);
 	}
 	
 	@Override
 	protected void initView ()
 	{
-		mLogin_btn.setOnClickListener(v ->
-		{
-			login();
-		});
+		mLogin_btn.setOnClickListener(v -> login());
+		
 		mRegister_fab.setOnClickListener(v ->
 		{
 			Intent intent = new Intent(mContext, RegisterActivity.class);
@@ -120,34 +115,32 @@ public class UserLoginFragment extends AbstractFragment
 	 */
 	private void login ()
 	{
-		
-		getServerDataByNet("login", mAccount_et.getText().toString(), mPassword_et.getText().toString())
-				.subscribe(new AbstractSimpleObserver< UserInfo >()
-				{
-					@Override
-					public void onNext ( UserInfo userInfo )
+		if ( Utils.isMobileNumber(mAccount_et.getText().toString()) && Utils.isNumberAndcharacter(mPassword_et.getText().toString()) )  //正则表达式过滤
+		{
+			getServerDataByNet("login", mAccount_et.getText().toString(), mPassword_et.getText().toString())
+					.subscribe(new AbstractSimpleObserver< UserInfo >()
 					{
-						if ( userInfo.result.equals("登入成功") )
+						@Override
+						public void onNext ( UserInfo userInfo )
 						{
-							ToastUtils.showShort(mContext, userInfo.result);
-							postLoginSuccessEvent();
+							if ( userInfo.result.equals("登入成功") )
+							{
+								BaseApplication.sUserName = userInfo.name;
+								LogUtils.d("Debug", "onNext: "+BaseApplication.sUserName);
+								BaseApplication.sUserID = userInfo.uid;         //建立用户UID
+								ToastUtils.showShort(mContext, userInfo.result);
+								postLoginSuccessEvent();                 //发送登入成功事件
+								
+							} else
+							{
+								ToastUtils.showShort(mContext, "error");
+							}
 						}
-						else
-							ToastUtils.showShort(mContext, "error");
-
-//						if ( hotel.result != null && ! mDatas.contains(hotel.result) )        //成立条件：获取数据不为空&原本容器不包含现获取数据
-//						{
-//							SceneryConstant.PAGE++;
-//							LogUtils.d(hotel.result.get(0).address);
-//							mDatas.addAll(hotel.result);
-//							mEmptyWrapper.notifyDataSetChanged();
-//						} else
-//						{
-//							ToastUtils.showShort(hotel.reason);
-//							LogUtils.d(hotel.reason);
-//						}
-					}
-				});
+					});
+		} else
+		{
+			ToastUtils.showShort(mContext, "账号必须为手机号,密码必须字母与数字结合且8到16位！");
+		}
 		
 	}
 	
@@ -162,6 +155,8 @@ public class UserLoginFragment extends AbstractFragment
 				       .getLoginResult(biz, account, password);
 //				       .compose(this.bindToLifecycle());    //防止内存泄露
 	}
+	
+	
 
 
 //	@Override
@@ -178,6 +173,8 @@ public class UserLoginFragment extends AbstractFragment
 		RxBus.getInstance()
 				.post(new Event(Event.EVENT_LOGIN_SUCCESS));
 	}
+	
+
 	
 }
 

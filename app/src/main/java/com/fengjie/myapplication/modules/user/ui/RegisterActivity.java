@@ -7,10 +7,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.fengjie.myapplication.R;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.modules.user.bean.UserInfo;
 import com.fengjie.myapplication.modules.user.utils.RetrofitUser;
 import com.fengjie.myapplication.utils.often.AbstractSimpleObserver;
 import com.fengjie.myapplication.utils.often.ToastUtils;
+import com.fengjie.myapplication.utils.often.Utils;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import io.reactivex.Observable;
@@ -27,9 +29,7 @@ public class RegisterActivity extends RxAppCompatActivity
 	private EditText mAccount_et;
 	private EditText mPassword_et;
 	private EditText mUserName_et;
-	
-	
-	private Button mRgister_btn;
+	private Button mRegister_btn;
 	private FloatingActionButton mClose_fab;
 	
 	@Override
@@ -47,21 +47,27 @@ public class RegisterActivity extends RxAppCompatActivity
 		mPassword_et = ( EditText ) findViewById(R.id.password_et_register);
 		mUserName_et = ( EditText ) findViewById(R.id.userName_et_register);
 		
-		mRgister_btn = ( Button ) findViewById(R.id.register_btn_register);
+		mRegister_btn = ( Button ) findViewById(R.id.register_btn_register);
 		mClose_fab = ( FloatingActionButton ) findViewById(R.id.finish_fab_register);
 		
 	}
 	
 	private void initView ()
 	{
-		mRgister_btn.setOnClickListener(v->{
-			register();
+		mRegister_btn.setOnClickListener(v ->
+		{
+			if ( Utils.isMobileNumber(mAccount_et.getText().toString()) &&          /**判断账号是否手机号码*/
+					     Utils.isNumberAndcharacter(mPassword_et.getText().toString()) )    /**判断密码是否字母和数字结合，并且8-16位*/
+			{
+				register();     //注册
+			} else
+			{
+				ToastUtils.showShort(BaseApplication.sAppContext,"账号必须为手机号,密码必须字母与数字结合且8到16位！");
+			}
 		});
 		
-		mClose_fab.setOnClickListener(v ->
-		{
-			finish();
-		});
+		mClose_fab.setOnClickListener(v -> finish());
+		
 	}
 	
 	/**
@@ -70,7 +76,7 @@ public class RegisterActivity extends RxAppCompatActivity
 	private void register ()
 	{
 		
-		getServerDataByNet("register", mAccount_et.getText().toString(), mPassword_et.getText().toString(),mUserName_et.getText().toString())
+		getServerDataByNet("register", mAccount_et.getText().toString(), mPassword_et.getText().toString(), mUserName_et.getText().toString())
 				.subscribe(new AbstractSimpleObserver< UserInfo >()
 				{
 					@Override
@@ -79,36 +85,23 @@ public class RegisterActivity extends RxAppCompatActivity
 						if ( userInfo.result.equals("success") )
 						{
 							ToastUtils.showShort(RegisterActivity.this, userInfo.result);
-						}
-						else
+						} else
 						{
 							ToastUtils.showShort(RegisterActivity.this, userInfo.result);
 						}
-
-//						if ( hotel.result != null && ! mDatas.contains(hotel.result) )        //成立条件：获取数据不为空&原本容器不包含现获取数据
-//						{
-//							SceneryConstant.PAGE++;
-//							LogUtils.d(hotel.result.get(0).address);
-//							mDatas.addAll(hotel.result);
-//							mEmptyWrapper.notifyDataSetChanged();
-//						} else
-//						{
-//							ToastUtils.showShort(hotel.reason);
-//							LogUtils.d(hotel.reason);
-//						}
 					}
 				});
-		
 	}
+	
 	
 	/**
 	 * 从网络获取
 	 */
-	private Observable< UserInfo > getServerDataByNet ( final String biz, final String account, final String password ,final String userName)
+	private Observable< UserInfo > getServerDataByNet ( final String biz, final String account, final String password, final String userName )
 	{
 		
 		return RetrofitUser.getInstance()
-				       .getRegisterResult(biz, account, password,userName)
+				       .getRegisterResult(biz, account, password, userName)
 				       .compose(this.bindToLifecycle());    //防止内存泄露
 	}
 	

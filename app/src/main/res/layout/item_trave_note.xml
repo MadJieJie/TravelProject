@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_note"
+    android:layout_width="match_parent"
+    android:layout_height="160dp"
+    android:background="@color/white"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="1dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="标题:"
+            android:textColor="@color/red"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/title_tv_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/title"
+            android:singleLine="true"
+            android:text="MadJieJie"
+            android:textColor="@color/black"
+            android:textSize="18sp"/>
+        <TextView
+            android:id="@+id/author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@+id/title_tv_travel"
+            android:singleLine="true"
+            android:text="By:"
+            android:textColor="@color/red"
+            android:textSize="20sp"/>
+        <TextView
+            android:id="@+id/author_tv_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/author"
+            android:text="XXXXX"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:id="@+id/summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="笔记摘要:"
+                android:textColor="@color/red"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:id="@+id/summary_tv_travel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_toRightOf="@+id/summary"
+                android:maxLines="2"
+                android:text="XXXXXXXX"
+                android:textColor="@color/black"
+                android:textSize="20sp"/>
+
+            <!--<TextView-->
+            <!--android:id="@+id/group_tv_travel"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:text="分类"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="18sp"/>-->
+        </RelativeLayout>
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

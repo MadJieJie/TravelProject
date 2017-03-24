@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/w_m_h_m">
+
+
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="fill_parent">-->
+    <!--<android.support.design.widget.AppBarLayout-->
+    <!--android:id="@+id/tool_layout"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:theme="@style/AppTheme.AppBarOverlay">-->
+
+    <!--<android.support.v7.widget.Toolbar-->
+    <!--android:id="@+id/toolbar_noteList"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="?attr/actionBarSize"-->
+    <!--android:background="?attr/colorPrimary"-->
+    <!--app:popupTheme="@style/AppTheme.PopupOverlay"/>-->
+
+    <!--</android.support.design.widget.AppBarLayout>-->
+
+    <!--<com.jcodecraeer.xrecyclerview.XRecyclerView-->
+    <!--android:id="@+id/content_rv_noteList"-->
+    <!--style="@style/w_m_h_m"-->
+    <!--android:layout_below="@+id/tool_layout"/>-->
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/content_rv_noteList"
+        style="@style/w_m_h_m"/>
+    <!--android:layout_below="@+id/tool_layout"-->
+
+    <!--</RelativeLayout>-->
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_main"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:visibility="visible"
+        app:fabSize="normal"
+        app:srcCompat="@mipmap/btn_add"/>
+    <!--app:layout_behavior="com.fengjie.myapplication.view.DefineHideFABBehavior"-->
+
+
+</RelativeLayout>

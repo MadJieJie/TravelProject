@@ -1,4 +1,4 @@
-package com.fengjie.myapplication.modules.note.utils;
+package com.fengjie.myapplication.utils.often;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
@@ -12,13 +12,17 @@ import java.util.Date;
  */
 public class DateUtils
 {
-	public static final String ENG_DATE_FROMAT = "EEE, d MMM yyyy HH:mm:ss z";
-	public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
-	public static final String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
-	public static final String YYYY_MM_DD = "yyyy-MM-dd";
-	public static final String YYYY = "yyyy";
-	public static final String MM = "MM";
-	public static final String DD = "dd";
+	private static final String ENG_DATE_FROMAT = "EEE, d MMM yyyy HH:mm:ss z";
+	private static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+	private static final String YYYY_MM_DD_HH_MM = "yyyy-MM-dd HH:mm";
+	private static final String YYYY_MM_DD = "yyyy-MM-dd";
+	private static final String YYYY = "yyyy";
+	
+	private static final String MM = "MM";
+	private static final String DD = "dd";
+	
+	private static final String M = "M";
+	private static final String D = "d";
 	
 	public static String generateTime ( long time )
 	{
@@ -108,6 +112,16 @@ public class DateUtils
 	}
 	
 	/**
+	 * 去掉前面为零的数,不自动填零
+	 *
+	 * @return
+	 */
+	public static String getNowDate ()
+	{
+		return getNowYear() + "-" + getNowMonth() + "-" + getNowDay();
+	}
+	
+	/**
 	 * @param dateString
 	 * @return
 	 * @作者 王建明
@@ -166,7 +180,7 @@ public class DateUtils
 	 */
 	public static String getNowMonth ()
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat(MM);
+		SimpleDateFormat sdf = new SimpleDateFormat(M);
 		return sdf.format(new Date());
 	}
 	
@@ -179,13 +193,8 @@ public class DateUtils
 	 */
 	public static String getNowDay ()
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat(DD);
+		SimpleDateFormat sdf = new SimpleDateFormat(D);
 		return sdf.format(new Date());
-	}
-	
-	public static String getNowDate ()
-	{
-		return getNowYear() + "-" + getNowMonth() + "-" + getNowDay();
 	}
 	
 	/**

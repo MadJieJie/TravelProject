@@ -40,7 +40,7 @@ import io.reactivex.disposables.Disposable;
 
 /**
  * @author Created by MadJieJie on 2017/1/31-21:49.
- * @brief
+ * @brief 景点
  * @attention
  */
 
@@ -137,21 +137,6 @@ public class SceneryFragment extends AbstractRetrofitFragment
 			mTwinklingRefreshLayout.startRefresh();
 	}
 
-//	@Override
-//	protected void onFragmentVisibleChange ( boolean isVisible )
-//	{
-//		if ( isVisible )    //   do things when fragment is visible
-//		{
-////			mTwinklingRefreshLayout.startRefresh();
-////			initView();
-////			initRecycleView();
-////			initRefreshLayout();
-////			loadData();
-//		} else
-//		{
-////			mTwinklingRefreshLayout.finishRefreshing();
-//		}
-//	}
 	
 	/**
 	 * 导入景点列表数据
@@ -245,10 +230,6 @@ public class SceneryFragment extends AbstractRetrofitFragment
 				/**build-WebView**/
 				
 				Utils.showWeb(mContext,title, url);
-
-//				Intent intent = new Intent(mContext, WebActivity.class);
-//				intent.putExtra("URL",url);
-//				startActivity(intent);
 			}
 			
 			@Override

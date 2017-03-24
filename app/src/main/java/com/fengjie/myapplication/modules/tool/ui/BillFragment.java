@@ -3,6 +3,7 @@ package com.fengjie.myapplication.modules.tool.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -18,15 +19,15 @@ import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.adapter.recyclerview.adapter.CommonAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.base.ViewHolder;
 import com.fengjie.myapplication.adapter.recyclerview.wrapper.EmptyWrapper;
-import com.fengjie.myapplication.modules.note.utils.DateUtils;
+import com.fengjie.myapplication.base.BaseApplication;
 import com.fengjie.myapplication.modules.tool.base.weather.AbstractRetrofitFragment;
 import com.fengjie.myapplication.modules.tool.bean.Bill;
 import com.fengjie.myapplication.modules.tool.bean.BillRV;
 import com.fengjie.myapplication.modules.tool.db.bill.BillDao;
 import com.fengjie.myapplication.modules.tool.db.weather.Time;
-import com.fengjie.myapplication.utils.often.LogUtils;
+import com.fengjie.myapplication.modules.tool.utils.weather.RxUtils;
+import com.fengjie.myapplication.utils.often.DateUtils;
 import com.fengjie.myapplication.utils.often.ToastUtils;
-import com.fengjie.myapplication.utils.rxbus.RxBus;
 import com.jaouan.compoundlayout.CompoundLayout;
 
 import java.util.ArrayList;
@@ -35,12 +36,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import cn.aigestudio.datepicker.cons.DPMode;
 import cn.aigestudio.datepicker.views.DatePicker;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+
+import static com.fengjie.myapplication.R.id.date_tv_bill;
 
 
 /**
  * @author Created by MadJieJie on 2017/1/31-21:49.
- * @brief
+ * @brief 记账本
  * @attention
  */
 
@@ -50,16 +57,16 @@ public class BillFragment extends AbstractRetrofitFragment
 	private RecyclerView mRecyclerView = null;
 	private static List< BillRV > mDatas = new ArrayList< BillRV >();
 	private Context mContext = null;
-//	private TwinklingRefreshLayout mTwinklingRefreshLayout;
 	
 	private CommonAdapter< BillRV > mAdapter = null;
 	private EmptyWrapper mEmptyWrapper = null;
-	//	private EmptyWrapper mEmptyWrapper = null;
-	private FloatingActionButton add_fab;
+	private FloatingActionButton mAdd_fab;
 	
 	private AlertDialog mAlertDialog;
 	private DatePicker mDatePicker = null;
 	private TextView mMoney_et_bill;
+	private TextView mDate_tv_bill;
+	
 	/** Paramters */
 	private Map< Integer, String > mStrTypeMap = new HashMap< Integer, String >();
 	private Map< String, Integer > mMipmapMap = new HashMap< String, Integer >();
@@ -67,10 +74,13 @@ public class BillFragment extends AbstractRetrofitFragment
 			, R.mipmap.iv_ticket_bill, R.mipmap.iv_treat_bill, R.mipmap.iv_insurance_bill, R.mipmap.iv_other_bill };
 	private Integer[] mViewId = { R.id.eat_rdl_bill, R.id.traffic_rdl_bill, R.id.buy_rdl_bill, R.id.amusement_rdl_bill, R.id.stay_rdl_bill
 			, R.id.ticket_rdl_bill, R.id.treat_rdl_bill, R.id.insurance_rdl_bill, R.id.other_rdl_bill };
-	private String[] mTypeArray = { "餐饮", "交通", "购物", "娱乐", "住宿", "门票", "医疗", "保险", "其他" };
-	private String mTypeStr = "餐饮";
+//	private String[] mTypeArray = { "餐饮", "交通", "购物", "娱乐", "住宿", "门票", "医疗", "保险", "其他" };
+	private String[] mTypeArray = { "eat", "traffic", "buy", "amusement", "stay", "ticket", "treat", "insurance", "other" };
+//	private String mTypeStr = "餐饮";
+	private String mTypeStr = "eat";
 	private boolean mIsTypeExist = false;
-	private boolean mIsDateIsExist = false;
+	private boolean mIsDateIsExistData = false;
+	private volatile String mDate = null;
 	
 	/**
 	 * 工厂模式
@@ -90,7 +100,6 @@ public class BillFragment extends AbstractRetrofitFragment
 	public void onCreate ( @Nullable Bundle savedInstanceState )
 	{
 		super.onCreate(savedInstanceState);
-		
 	}
 	
 	
@@ -121,73 +130,30 @@ public class BillFragment extends AbstractRetrofitFragment
 //		initRxBus();
 	}
 	
-	@Override
-	public void onStart ()
-	{
-		super.onStart();
-		Bill bill = BillDao.getQueryBillForDB(DateUtils.getNowDate()); /**检查该天是否存在,若存在则取出数据显示*/
-		if ( bill != null )
-		{
-			mDatas.clear();     //清空现数据
-			int[] intArray = bill.getAllArray();
-			for ( int position = 0; position < bill.getAllArray().length; position++ )
-			{
-				if ( intArray[position] > 0 )
-				{
-					mDatas.add(new BillRV(mMipmapIdArray[position], intArray[position] + "", mTypeArray[position]));
-				}
-			}
-			mAdapter.notifyDataSetChanged();    //更新
-			mIsDateIsExist = true;
-		} else
-		{
-			mIsDateIsExist = false;
-		}
-	}
-	
-	@Override
-	public void onPause ()
-	{
-		super.onPause();
-		
-		
-	}
 	
 	@Override
 	public void onDestroy ()
 	{
 		super.onDestroy();
-		LogUtils.d("Debug", "onDestroy: " + "bill's data insert db");        //将数据插入数据库
-		Bill bill = new Bill(DateUtils.getNowDate());
-		
-		bill = getBillForMDatas(bill);
-		
-		if ( mIsDateIsExist )                      /**数据库已存在数据,则更新*/
-		{
-			BillDao.updateDataToDB(bill);
-		} else if ( mDatas.size() > 0 )             /**如果mData有数据则插入数据*/
-		{
-			BillDao.insertDataToDB(bill);
-		}
-		RxBus.getInstance().unRegister(this);
+		keepDataToDB(mDate);    //将数据插入数据库
+//		RxBus.getInstance().unRegister(this);           //订阅事件
 	}
 	
 	
 	private void findView ( View view )
 	{
 		mMoney_et_bill = ( TextView ) mView.findViewById(R.id.money_et_bill);
-		add_fab = ( FloatingActionButton ) mView.findViewById(R.id.add_fab_bill);
-//		mTwinklingRefreshLayout = ( TwinklingRefreshLayout ) view.findViewById(R.id.refresh_trl_scenery);
+		mAdd_fab = ( FloatingActionButton ) mView.findViewById(R.id.add_fab_bill);
+		mDate_tv_bill = ( TextView ) mView.findViewById(date_tv_bill);
 	}
 	
 	private void initView ()
 	{
-		mView.findViewById(R.id.date_lv_bill).setOnClickListener(v ->
-		{
-			mAlertDialog.show();
-		});
+		mView.findViewById(R.id.date_lv_bill).setOnClickListener(v -> mAlertDialog.show());
 		
-		add_fab.setOnClickListener(v ->         //添加账单条目
+		mDate_tv_bill.setText(DateUtils.getNowDate());
+		
+		mAdd_fab.setOnClickListener(v ->         //添加账单条目
 		{
 			if ( mMoney_et_bill.getText().toString().equals("") )
 			{
@@ -211,7 +177,6 @@ public class BillFragment extends AbstractRetrofitFragment
 				} else              //如果该类型的消费不存在
 				{
 					mDatas.add(new BillRV(0, mMoney_et_bill.getText().toString(), mTypeStr));
-//					mDatas.add(new BillRV(mID, mMoney_et_bill.getText().toString(), mTypeStr));
 				}
 				
 				mEmptyWrapper.notifyDataSetChanged();     //更新Adapter
@@ -220,14 +185,21 @@ public class BillFragment extends AbstractRetrofitFragment
 		});
 	}
 	
+	/**
+	 * 初始化装载日期选择器的
+	 */
 	private void initDatePickerDialog ()
 	{
+		mDate = DateUtils.getNowDate();
+		queryDateHaveData(mDate);           //检查该天是否存在数据,若存在则取出数据显示
+		
 		mDatePicker = new DatePicker(mContext);
-//		mDatePicker.setMode(DPMode.SINGLE);     //single-单选模式
 		mDatePicker.setDate(Integer.parseInt(Time.getNowYear()), Integer.parseInt(Time.getNowMonth()));      //必选选择一个日期
-		mDatePicker.setOnDateSelectedListener(date ->
+		mDatePicker.setMode(DPMode.SINGLE);         //single-单选模式
+		mDatePicker.setOnDatePickedListener(date ->
 		{
-			
+			mDate = date;               //缓存当前选择的日期
+//			ToastUtils.showShort(BaseApplication.sAppContext, date);      /**获得选择的日期*/
 		});
 
 //		mDatePicker.setDPDecor(new DPDecor(){
@@ -240,14 +212,17 @@ public class BillFragment extends AbstractRetrofitFragment
 		mAlertDialog.setCancelable(true);       //触摸外部不能关闭
 		mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", ( dialog, which ) ->
 		{
-//			ToastUtils.showShort(mContext, mDatePicker.getYear() + "-" + mDatePicker.getMonth() + mDatePicker.getDayOfMonth());
+			new Handler().post(() -> keepDataToDB(mDate_tv_bill.getText().toString()));            /**先保存之前日期数据入数据库*/
+			new Handler().postDelayed(() -> queryDateHaveData(mDate), 250);                     /**搜寻时间选择器*/
+			mDate_tv_bill.setText(mDate);                                        /**更新TextView日期*/
+			ToastUtils.showShort(BaseApplication.sAppContext, "已保存数据");
 		});
 //		mAlertDialog.dismiss();
 		
 	}
 	
 	/**
-	 * 初始化选择界面
+	 * 初始化选择界面Dialog.
 	 */
 	private void initRadioButton ()
 	{
@@ -264,15 +239,10 @@ public class BillFragment extends AbstractRetrofitFragment
 	private void initRecycleView ()
 	{
 		mRecyclerView = ( RecyclerView ) mView.findViewById(R.id.content_rv_bill);
-//
-//		mDatas.add(new String[]{ "金额", "¥0.00" });
-//		mDatas.add(new String[]{ "日期", DateUtils.getNowDate() });
-//		mDatas.add(new String[]{ "备注", "" });
-//
-//		/**设置RecyclerView垂直放置内容*/
+		
+		/**设置RecyclerView垂直放置内容*/
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
-//
-//
+
 		mAdapter = new CommonAdapter< BillRV >(mContext, R.layout.item_bill, mDatas)
 		{
 			@Override
@@ -322,40 +292,124 @@ public class BillFragment extends AbstractRetrofitFragment
 		return compoundLayout;
 	}
 	
+	/**
+	 * 收集当前mDatas的数据
+	 *
+	 * @param bill
+	 * @return
+	 */
 	private Bill getBillForMDatas ( Bill bill )
 	{
 		for ( BillRV billRV : mDatas )
 		{
-			if ( billRV.getTpye().equals("餐饮") )
+			if ( billRV.getTpye().equals("eat") )
 			{
 				bill.setEat(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("交通") )
+			} else if ( billRV.getTpye().equals("traffic") )
 			{
 				bill.setTraffic(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("购物") )
+			} else if ( billRV.getTpye().equals("buy") )
 			{
 				bill.setBuy(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("娱乐") )
+			} else if ( billRV.getTpye().equals("amusement") )
 			{
 				bill.setAmusement(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("住宿") )
+			} else if ( billRV.getTpye().equals("stay") )
 			{
 				bill.setStay(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("门票") )
+			} else if ( billRV.getTpye().equals("ticket") )
 			{
 				bill.setTicket(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("医疗") )
+			} else if ( billRV.getTpye().equals("treat") )
 			{
 				bill.setTreat(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("保险") )
+			} else if ( billRV.getTpye().equals("insurance") )
 			{
 				bill.setInsurance(Integer.parseInt(billRV.getMoney()));
-			} else if ( billRV.getTpye().equals("其他") )
+			} else if ( billRV.getTpye().equals("other") )
 			{
 				bill.setOther(Integer.parseInt(billRV.getMoney()));
 			}
+			
 		}
 		return bill;
+	}
+	
+	/**
+	 * 检查该天是否存在数据方法,若存在则取出数据显示
+	 */
+	private void queryDateHaveData ( final String date )
+	{
+		Observable
+				.create(new ObservableOnSubscribe< Bill >()
+				{
+					@Override
+					public void subscribe ( ObservableEmitter< Bill > e ) throws Exception
+					{
+						Bill bill = BillDao.getQueryBillForDB(date);
+						if ( bill != null )
+							e.onNext(bill);
+						else
+							e.onNext(new Bill(Bill.NOT_EXIST_DATA));
+						e.onComplete();
+					}
+				})
+				.compose(RxUtils.rxSchedulerHelper())
+				.subscribe(bill ->
+				{
+					
+					mDatas.clear();              /**先清空现数据*/
+					if ( bill.getId() > Bill.EXIST_DATA )         /**如果存在数据则更新*/
+					{
+						int[] intArray = bill.getAllArray();
+						for ( int position = 0; position < bill.getAllArray().length; position++ )
+						{
+							if ( intArray[position] > 0 )
+							{
+								mDatas.add(new BillRV(mMipmapIdArray[position], intArray[position] + "", mTypeArray[position]));
+							}
+						}
+						mEmptyWrapper.notifyDataSetChanged();    //更新RecyclerView
+						mIsDateIsExistData = true;      //该日期有数据
+					} else if ( bill.getId() == Bill.NOT_EXIST_DATA )        /**如果不存在数据则清空界面*/
+					{
+						mIsDateIsExistData = false;
+						mEmptyWrapper.notifyDataSetChanged();    //更新RecyclerView
+					}
+				});
+		
+	}
+	
+	/**
+	 * 将数据存入数据库,若数据库存在该date的数据则更新,反之插入
+	 *
+	 * @param date
+	 */
+	private void keepDataToDB ( final String date )
+	{
+		Observable
+				.create(new ObservableOnSubscribe< Bill >()
+				{
+					@Override
+					public void subscribe ( ObservableEmitter< Bill > e ) throws Exception
+					{
+						Bill bill = getBillForMDatas(new Bill(date));       //获取当前界面的所有数据
+						if ( bill != null )
+							e.onNext(bill);
+						e.onComplete();
+					}
+				})
+				.compose(RxUtils.rxSchedulerHelper())
+				.subscribe(bill ->
+				{
+					if ( mIsDateIsExistData )                      /**数据库已存在数据,则更新*/
+					{
+						BillDao.updateDataToDB(bill);
+					} else if ( mDatas.size() > 0 )             /**如果mData有数据则插入数据*/
+					{
+						BillDao.insertDataToDB(bill);
+					}
+				});
 	}
 	
 	private void initRxBus ()
@@ -387,155 +441,6 @@ public class BillFragment extends AbstractRetrofitFragment
 //		if ( mTwinklingRefreshLayout != null )
 //			mTwinklingRefreshLayout.startRefresh();
 	}
-
-//	@Override
-//	protected void onFragmentVisibleChange ( boolean isVisible )
-//	{
-//		if ( isVisible )    //   do things when fragment is visible
-//		{
-////			mTwinklingRefreshLayout.startRefresh();
-////			initView();
-////			initRecycleView();
-////			initRefreshLayout();
-////			loadData();
-//		} else
-//		{
-////			mTwinklingRefreshLayout.finishRefreshing();
-//		}
-//	}
-	
-	/**
-	 * 导入景点列表数据
-	 */
-//	private void loadData ()
-//	{
-//		/**观察者**/
-//		getSceneryDataByNet(
-//				SharedPreferenceUtil.getInstance().getCityProId(), SharedPreferenceUtil.getInstance().getCityId(), SceneryConstant.PAGE, false)
-//				.subscribe(new Observer< Scenery >()
-//				{
-//					@Override
-//					public void onSubscribe ( Disposable d )
-//					{
-//
-//					}
-//
-//					@Override
-//					public void onNext ( Scenery scenery )  //scenery must not null,because emitter can not send null object.
-//					{
-//
-//						if ( scenery.result != null && ! mDatas.contains(scenery.result) )        //成立条件：获取数据不为空&原本容器不包含现获取数据
-//						{
-//							SceneryConstant.PAGE++;
-//							LogUtils.d(scenery.result.get(0).address);
-//							mDatas.addAll(scenery.result);
-//							mEmptyWrapper.notifyDataSetChanged();
-//						} else
-//						{
-//							ToastUtils.showShort(mContext, scenery.reason);
-//							LogUtils.d(scenery.reason);
-//						}
-//					}
-//
-//					@Override
-//					public void onError ( Throwable e )
-//					{
-//						LogUtils.d(e.toString());
-//					}
-//
-//					@Override
-//					public void onComplete ()
-//					{
-//						ToastUtils.showShort(mContext, getString(R.string.addComplete));
-//					}
-//				});
-//	}
-//
-//	/**
-//	 * 从网络获取景点列表数据
-//	 *
-//	 * @param proId    API need.
-//	 * @param cityId   API need.
-//	 * @param page     第几页
-//	 * @param paybyvas 是否密文
-//	 * @return
-//	 */
-//	private Observable< Scenery > getSceneryDataByNet ( final int proId, final int cityId, final int page, final boolean paybyvas )
-//	{
-//
-//		return RetrofitScenery.getInstance()
-//				       .getScenery(proId, cityId, page, paybyvas)
-//				       .compose(this.bindToLifecycle());   /**更新天气处*/
-//	}
-//
-//
-//		mAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener()
-//		{
-//			@Override
-//			public void onItemClick ( View view, RecyclerView.ViewHolder holder, int position )
-//			{
-//				String url = mDatas.get(position).url;
-//				String title = mDatas.get(position).title;
-//				LogUtils.d(url);
-//
-//				/**build-WebView**/
-//
-//				Utils.showWeb(mContext,title, url);
-//
-////				Intent intent = new Intent(mContext, WebActivity.class);
-////				intent.putExtra("URL",url);
-////				startActivity(intent);
-//			}
-//
-//			@Override
-//			public boolean onItemLongClick ( View view, RecyclerView.ViewHolder holder, int position )
-//			{
-//				return false;
-//			}
-//		});
-//
-//		mEmptyWrapper = new EmptyWrapper< Scenery.ResultBean >(mAdapter);
-//		mEmptyWrapper.setEmptyView(LayoutInflater.from(mContext).inflate(R.layout.view_empty, mRecyclerView, false));
-//
-//		mRecyclerView.setAdapter(mEmptyWrapper);
-//
-//
-//	}
-//
-//	/**
-//	 * 初始化上下拉刷新布局
-//	 */
-//	private void initRefreshLayout ()
-//	{
-//		BezierLayout headerView = new BezierLayout(mContext);
-//		mTwinklingRefreshLayout.setHeaderView(headerView);
-//		mTwinklingRefreshLayout.setOverScrollBottomShow(false);
-//
-//		mTwinklingRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter()
-//		{
-//			@Override
-//			public void onRefresh ( TwinklingRefreshLayout refreshLayout )      //上拉监听
-//			{
-//				super.onRefresh(refreshLayout);
-//				new Handler().postDelayed(() ->
-//				{
-//					loadData();
-//					refreshLayout.finishRefreshing();       //关闭刷新图标
-//				}, 500);
-//			}
-//
-//			@Override
-//			public void onLoadMore ( TwinklingRefreshLayout refreshLayout )     //下拉监听
-//			{
-//				super.onLoadMore(refreshLayout);
-//				new Handler().postDelayed(() ->
-//				{
-//					loadData();
-//					refreshLayout.finishLoadmore();
-//				}, 500);
-//			}
-//		});
-//	}
 	
 }
 

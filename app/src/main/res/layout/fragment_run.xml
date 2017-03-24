@@ -15,7 +15,7 @@
                                                 android:background="@color/color_str_run"
                                                 app:layout_heightPercent="8%"/>
     <android.support.v4.view.ViewPager
-        android:id="@+id/content_viewPager_run"
+        android:id="@+id/content_vp_run"
         android:layout_below="@+id/menu_view_run"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

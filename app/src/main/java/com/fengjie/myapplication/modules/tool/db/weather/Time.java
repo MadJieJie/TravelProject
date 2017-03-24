@@ -37,8 +37,7 @@ public class Time
 	public static String getNowYMD ()
 	{
 		
-		SimpleDateFormat mDateFormat = new SimpleDateFormat(
-				                                                   "yyyy-MM-dd");
+		SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return mDateFormat.format(new Date());
 	}
 	
@@ -49,8 +48,7 @@ public class Time
 	public static String getNowYear ()
 	{
 		
-		SimpleDateFormat mDateFormat = new SimpleDateFormat(
-				                                                   "yyyy");
+		SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy");
 		return mDateFormat.format(new Date());
 	}
 	

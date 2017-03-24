@@ -1,5 +1,10 @@
 package com.fengjie.myapplication.modules.user.bean;
 
+import com.fengjie.myapplication.modules.travel.bean.TravelNote;
+import com.fengjie.myapplication.modules.user.base.Biz;
+
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -14,7 +19,7 @@ import retrofit2.http.POST;
 
 public interface IUserAPI
 {
-	String HOST = "http://192.168.191.1:8080/ServletTest/";
+	String HOST = "http://119.29.11.95:8080/ServletTest/";
 	
 	@POST ( "travel" )
 	@FormUrlEncoded
@@ -26,7 +31,17 @@ public interface IUserAPI
 	@POST ( "travel" )
 	@FormUrlEncoded
 	Call< UserInfo > login ( @Field ( "biz" ) String biz,         //事务
-	                            @Field ( "account" ) String account,   //账号
-	                            @Field ( "password" ) String password); //密码
+	                         @Field ( "account" ) String account,   //账号
+	                         @Field ( "password" ) String password ); //密码
+	
+	@POST ( "travel" )
+	@FormUrlEncoded
+	Call< Biz > uploadNote ( @Field ( "biz" ) String biz,         //事务
+	                         @Field ( "json" ) String json );        //JSon数据
+	
+	@POST ( "travel" )
+	@FormUrlEncoded
+	Call< List<TravelNote > > getUserAllNote ( @Field ( "biz" ) String biz,         //事务
+	                                           @Field ( "fk_user_uid" ) int fk_user_uid);        //fk_user_uid
 	
 }

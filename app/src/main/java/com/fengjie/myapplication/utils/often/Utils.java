@@ -26,6 +26,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.fengjie.myapplication.R;
+import com.fengjie.myapplication.base.AbstractRxPermissionEvent;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.thefinestartist.finestwebview.FinestWebView;
 
 import java.io.Closeable;
@@ -43,6 +45,45 @@ import java.util.regex.Pattern;
 
 public class Utils
 {
+	
+	private Utils ()
+	{
+		throw new UnsupportedOperationException("can't be init");
+	}
+	
+	public static void isGetRxPermission ( Activity activity, AbstractRxPermissionEvent abstractRxPermissionEvent, String... permission )
+	{
+		RxPermissions rxPermissions = new RxPermissions(activity);
+//		rxPermissions.request(Manifest.permission.ACCESS_COARSE_LOCATION)       //获取定位权限
+		rxPermissions.request(permission)       //获取网络权限
+				.subscribe(granted ->       //get the permission
+				{
+					if ( granted )      //获得权限(Permission)
+					{
+						abstractRxPermissionEvent.canGetPermissionEvent();
+					} else              //don't get
+					{
+						abstractRxPermissionEvent.notGetPermissionEvent();
+//						ToastUtils.showShort(BaseApplication.sAppContext,"未获取权限,无法实现功能");
+					}
+				});
+		rxPermissions = null;
+	}
+	
+	/**
+	 * 判断字符串是否数字和字符结合，并且8-16位
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNumberAndcharacter(String str)
+	{
+//		return str.matches("^.*[a-zA-Z]+.*$") && str.matches("^.*[0-9]+.*$") && str.matches("^.{8,}$")
+//				&& !str.matches("^.*[\\s]+.*$") && !str.matches("^.*[/^/$/.//,;:'!@#%&/*/|/?/+/(/)/[/]/{/}]+.*$");
+//		Pattern p = Pattern.compile("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$");
+//		Matcher m = p.matcher(str);
+		return str.matches("^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$")&&(!str.matches("^.*[/^/$/.//,;:'!@#%&/*/|/?/+/(/)/[/]/{/}]+.*$"))
+				       &&(!str.matches("^.*[\\s]+.*$"));
+	}
 	
 	/**
 	 * 获取版本号
@@ -85,7 +126,7 @@ public class Utils
 	/**
 	 * 获取应用程序名称
 	 */
-	public static String getAppName(Context context)
+	public static String getAppName ( Context context )
 	{
 		try
 		{
@@ -94,7 +135,7 @@ public class Utils
 					context.getPackageName(), 0);
 			int labelRes = packageInfo.applicationInfo.labelRes;
 			return context.getResources().getString(labelRes);
-		} catch (NameNotFoundException e)
+		} catch( NameNotFoundException e )
 		{
 			e.printStackTrace();
 		}
@@ -107,7 +148,7 @@ public class Utils
 	 * @param context
 	 * @return 当前应用的版本名称
 	 */
-	public static String getVersionName(Context context)
+	public static String getVersionName ( Context context )
 	{
 		try
 		{
@@ -116,7 +157,7 @@ public class Utils
 					context.getPackageName(), 0);
 			return packageInfo.versionName;
 			
-		} catch (NameNotFoundException e)
+		} catch( NameNotFoundException e )
 		{
 			e.printStackTrace();
 		}
@@ -274,27 +315,27 @@ public class Utils
 		return height;
 	}
 	
-	private static final int INVALID_VAL = -1;
+	private static final int INVALID_VAL = - 1;
 	private static final int COLOR_DEFAULT = Color.parseColor("#20000000");
 	
-	@TargetApi (Build.VERSION_CODES.LOLLIPOP)
-	public static void compat(Activity activity, int statusColor)
+	@TargetApi ( Build.VERSION_CODES.LOLLIPOP )
+	public static void compat ( Activity activity, int statusColor )
 	{
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
 		{
-			if (statusColor != INVALID_VAL)
+			if ( statusColor != INVALID_VAL )
 			{
 				activity.getWindow().setStatusBarColor(statusColor);
 			}
 			return;
 		}
 		
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
+		if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP )
 		{
 			int color = COLOR_DEFAULT;
-			ViewGroup contentView = (ViewGroup) activity.findViewById(android.R.id.content);
-			if (statusColor != INVALID_VAL)
+			ViewGroup contentView = ( ViewGroup ) activity.findViewById(android.R.id.content);
+			if ( statusColor != INVALID_VAL )
 			{
 				color = statusColor;
 			}
@@ -307,26 +348,29 @@ public class Utils
 		
 	}
 	
-	public static void compat(Activity activity)
+	public static void compat ( Activity activity )
 	{
 		compat(activity, INVALID_VAL);
 	}
 	
 	
-	public static int getStatusBarHeight(Context context)
+	public static int getStatusBarHeight ( Context context )
 	{
 		int result = 0;
 		int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-		if (resourceId > 0)
+		if ( resourceId > 0 )
 		{
 			result = context.getResources().getDimensionPixelSize(resourceId);
 		}
 		return result;
 	}
 	
-	public static void setWindowStatusBarColor(Activity activity, int colorResId) {
-		try {
-			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+	public static void setWindowStatusBarColor ( Activity activity, int colorResId )
+	{
+		try
+		{
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
+			{
 				Window window = activity.getWindow();
 				window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 				window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -335,14 +379,18 @@ public class Utils
 				//底部导航栏
 				//window.setNavigationBarColor(activity.getResources().getColor(colorResId));
 			}
-		} catch (Exception e) {
+		} catch( Exception e )
+		{
 			e.printStackTrace();
 		}
 	}
 	
-	public static void setWindowStatusBarColor( Dialog dialog, int colorResId) {
-		try {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+	public static void setWindowStatusBarColor ( Dialog dialog, int colorResId )
+	{
+		try
+		{
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP )
+			{
 				Window window = dialog.getWindow();
 				window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 				window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -351,7 +399,8 @@ public class Utils
 				//底部导航栏
 				//window.setNavigationBarColor(activity.getResources().getColor(colorResId));
 			}
-		} catch (Exception e) {
+		} catch( Exception e )
+		{
 			e.printStackTrace();
 		}
 	}
@@ -399,8 +448,7 @@ public class Utils
 	}
 	
 	/**
-	 *
-	 * @param mobiles   mobile number
+	 * @param mobiles mobile number
 	 * @return If it is mobile number will return true,and otherwise.
 	 */
 	public static boolean isMobileNumber ( String mobiles )
@@ -414,6 +462,7 @@ public class Utils
 	
 	/**
 	 * display web.
+	 *
 	 * @param context
 	 * @param title
 	 * @param url

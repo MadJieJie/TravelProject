@@ -1,5 +1,6 @@
 package com.fengjie.myapplication.modules.run.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,18 +16,19 @@ import com.fengjie.myapplication.adapter.recyclerview.adapter.CommonAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.adapter.MultiItemTypeAdapter;
 import com.fengjie.myapplication.adapter.recyclerview.base.ViewHolder;
 import com.fengjie.myapplication.adapter.recyclerview.wrapper.EmptyWrapper;
+import com.fengjie.myapplication.base.AbstractRxPermissionEvent;
 import com.fengjie.myapplication.base.fragment.IInitView;
 import com.fengjie.myapplication.event.Event;
 import com.fengjie.myapplication.modules.run.bean.Hotel;
 import com.fengjie.myapplication.modules.run.utils.RetrofitHotel;
 import com.fengjie.myapplication.modules.tool.base.scenery.SceneryConstant;
 import com.fengjie.myapplication.modules.tool.base.weather.AbstractRetrofitFragment;
+import com.fengjie.myapplication.modules.tool.utils.weather.ImageLoader;
 import com.fengjie.myapplication.utils.often.LogUtils;
 import com.fengjie.myapplication.utils.often.SharedPreferenceUtil;
 import com.fengjie.myapplication.utils.often.ToastUtils;
 import com.fengjie.myapplication.utils.often.Utils;
 import com.fengjie.myapplication.utils.rxbus.RxBus;
-import com.fengjie.myapplication.modules.tool.utils.weather.ImageLoader;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.bezierlayout.BezierLayout;
@@ -87,7 +89,7 @@ public class HotelFragment extends AbstractRetrofitFragment implements IInitView
 		initRecycleView();
 		initRefreshLayout();
 		initRxBus();
-		mTwinklingRefreshLayout.startRefresh();     //导入数据
+		requestPermission();        //
 	}
 	
 	@Override
@@ -110,7 +112,6 @@ public class HotelFragment extends AbstractRetrofitFragment implements IInitView
 	@Override
 	protected void lazyLoad ()
 	{
-//		mTwinklingRefreshLayout.startLoadMore();
 	}
 	
 	private void initRxBus ()
@@ -128,6 +129,27 @@ public class HotelFragment extends AbstractRetrofitFragment implements IInitView
 							}
 						}
 				);
+	}
+	
+	/**
+	 * 请求权限
+	 */
+	private void requestPermission ()
+	{
+		Utils.isGetRxPermission(getActivity(), new AbstractRxPermissionEvent()
+		{
+			@Override
+			public void canGetPermissionEvent ()
+			{
+				mTwinklingRefreshLayout.startRefresh();     /**刷新事件,从API获取数据通过适配器转换成界面*/
+			}
+			
+			@Override
+			public void notGetPermissionEvent ()
+			{
+				ToastUtils.showShort("未获网络权限权限");
+			}
+		}, Manifest.permission.INTERNET);
 	}
 	
 	/**
@@ -171,7 +193,7 @@ public class HotelFragment extends AbstractRetrofitFragment implements IInitView
 					@Override
 					public void onComplete ()
 					{
-						ToastUtils.showShort(mContext,getString(R.string.addComplete));
+						ToastUtils.showShort(mContext, getString(R.string.addComplete));
 					}
 				});
 	}
@@ -220,7 +242,7 @@ public class HotelFragment extends AbstractRetrofitFragment implements IInitView
 				
 				/**build-WebView**/
 				
-				Utils.showWeb(mContext,title, url);
+				Utils.showWeb(mContext, title, url);
 
 //				Intent intent = new Intent(mContext, WebActivity.class);
 //				intent.putExtra("URL",url);

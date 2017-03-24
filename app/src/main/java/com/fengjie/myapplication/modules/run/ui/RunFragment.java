@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.fengjie.myapplication.R;
 import com.fengjie.myapplication.base.fragment.AbstractFragment;
 import com.fengjie.myapplication.modules.run.adapter.HomePagerAdapter;
-import com.fengjie.myapplication.modules.travel.ui.TravelFragment;
 import com.fengjie.myapplication.utils.often.LogUtils;
 import com.fengjie.myapplication.view.DefinedMenu;
 
@@ -59,7 +58,7 @@ public class RunFragment extends AbstractFragment
 	{
 		super.onViewCreated(view, savedInstanceState);
 		findView(mView);
-		initMenu(getString(R.string.travel), DefinedMenu.TAB_MENU);
+		initMenu(null, DefinedMenu.TAB_MENU);
 		initView();
 	}
 	
@@ -67,7 +66,7 @@ public class RunFragment extends AbstractFragment
 	protected void findView ( View view )
 	{
 		mMenu = ( DefinedMenu ) view.findViewById(R.id.menu_view_run);
-		mViewPager = ( ViewPager ) view.findViewById(R.id.content_viewPager_run);
+		mViewPager = ( ViewPager ) view.findViewById(R.id.content_vp_run);
 	}
 	
 	@Override
@@ -75,7 +74,7 @@ public class RunFragment extends AbstractFragment
 	{
 		HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getFragmentManager());
 		homePagerAdapter.addTab(HotelFragment.newInstance(), getString(R.string.hotel));
-		homePagerAdapter.addTab(TravelFragment.newInstance(), getString(R.string.memorandum));
+		homePagerAdapter.addTab(NoteFragment.newInstance(), getString(R.string.memorandum));
 		mViewPager.setAdapter(homePagerAdapter);
 		mMenu.setupWithViewPager(mViewPager);
 	}

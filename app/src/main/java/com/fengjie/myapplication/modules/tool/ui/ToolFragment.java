@@ -3,7 +3,6 @@ package com.fengjie.myapplication.modules.tool.ui;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import com.fengjie.myapplication.view.DefinedMenu;
 
 /**
  * @author Created by MadJieJie on 2017/1/31-21:49.
- * @brief
+ * @brief  工具箱
  * @attention
  */
 
@@ -41,7 +40,6 @@ public class ToolFragment extends AbstractFragment
 		if ( mView == null )
 		{
 			mView = inflater.inflate(R.layout.fragment_tool, container, false);
-//			Utils.setWindowStatusBarColor(getActivity(),R.color.color_str_tool);
 		}
 		
 		return mView;
@@ -63,9 +61,6 @@ public class ToolFragment extends AbstractFragment
 	{
 		mMenu = ( DefinedMenu ) view.findViewById(R.id.menu_view_tool);
 		mViewPager = ( ViewPager ) view.findViewById(R.id.content_viewPager_tool);
-
-//		mRecyclerView = ( RecyclerView ) view.findViewById(R.id.weather_recyclerView_tool);
-		
 	}
 	
 	
@@ -78,33 +73,10 @@ public class ToolFragment extends AbstractFragment
 		homePagerAdapter.addTab(BillFragment.newInstance(), getString(R.string.billBook));
 		mViewPager.setAdapter(homePagerAdapter);
 		mMenu.setupWithViewPager(mViewPager);
-//		mMenu.setLeftButtonListener(v -> {
-//
-//
-//		});
 
-//		initFragment();
 	}
 	
 	
-	private void initFragment ()
-	{
-//		getFragmentManager().beginTransaction().replace(R.id.weatherContent_fl_tool, WeatherFragment.newInstance()).commit();       //must commit can effect
-		Log.d("Debug", "initFragment: ");
-	}
-
-
-//	@Override
-//	public void onBackPressed ()
-//	{
-//		if ( mMenuDialogFragment != null && mMenuDialogFragment.isAdded() )
-//		{
-//			mMenuDialogFragment.dismiss();
-//		} else
-//		{
-//			finish();
-//		}
-//	}
 	
 }
 

@@ -11,10 +11,10 @@
         <item
             android:id="@+id/menu_writeNote"
             android:icon="@drawable/icon_city"
-            android:title="备忘录" />
+            android:title="写备忘" />
 
         <item
-            android:id="@+id/menu_travel"
+            android:id="@+id/menu_writeTravelNote"
             android:icon="@drawable/icon_city"
             android:title="写游记" />
 
@@ -22,6 +22,7 @@
             android:id="@+id/menu_city"
             android:icon="@drawable/icon_city"
             android:title="选择城市" />
+
         <!--<item-->
             <!--android:id="@+id/menu_news"-->
             <!--android:icon="@drawable/icon_city"-->
@@ -41,15 +42,16 @@
     </group>
 
     <group android:id="@+id/menu_group_2">
-        <item
-            android:id="@+id/menu_settings"
-            android:title="Settings" />
-        <item
-            android:id="@+id/menu_about"
-            android:title="About" />
+        <!--<item-->
+            <!--android:id="@+id/menu_settings"-->
+            <!--android:title="Settings" />-->
+        <!--<item-->
+            <!--android:id="@+id/menu_about"-->
+            <!--android:title="About" />-->
         <item
             android:id="@+id/menu_quit"
             android:title="Quit" />
+
     </group>
 
 </menu>

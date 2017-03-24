@@ -11,6 +11,9 @@ public class BaseApplication extends Application
 	
 	private static String sCacheDir;
 	public static Context sAppContext;
+	/**缓存用户信息*/
+	public static int sUserID = -1;
+	public static String sUserName = "anonymity";
 
 
 	

@@ -40,8 +40,14 @@
     <string name="scenery">景点</string>
     <string name="billBook">记账本</string>
 
-    <!--tool-->
+    <!--run-->
     <string name="hotel">酒店推荐</string>
     <string name="memorandum">备忘录</string>
+
+    <!--travel-->
+    <string name="myTravelNote">我的游记</string>
+    <string name="otherTravelNote">其他游记</string>
+
+
 
 </resources>

@@ -6,85 +6,104 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/tool_layout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_newNote"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </android.support.design.widget.AppBarLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/content_new"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/gray"
-        android:orientation="vertical"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <EditText
-            android:id="@+id/et_new_title"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/tool_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="请输入标题"
-            android:padding="16dp"
-            android:textColor="@color/white"
-            android:textSize="18sp"/>
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_newNote"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
-            <TextView
-                android:id="@+id/tv_new_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:textColor="@color/white"
-                android:textSize="16sp"/>
+        </android.support.design.widget.AppBarLayout>
 
-            <TextView
-                android:id="@+id/tv_new_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/white"
-                android:textSize="16sp"/>
-        </RelativeLayout>
-
-        <com.sendtion.xrichtext.RichTextEditor
-            android:id="@+id/et_new_content"
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/content_new"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/white"
-            android:textSize="16sp"/>
+            android:background="@color/gray"
+            android:orientation="vertical"
+            android:layout_below="@+id/tool_layout"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/title_et_newNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="请输入标题"
+                android:padding="16dp"
+                android:textColor="@color/black"
+                android:textSize="18sp"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+                <TextView
+                    android:id="@+id/saveTime_tv_newNote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"/>
+
+                <!--<TextView-->
+                <!--android:id="@+id/tv_new_group"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="16sp"/>-->
+            </RelativeLayout>
+
+            <!--<com.sendtion.xrichtext.RichTextEditor-->
+            <!--android:id="@+id/et_new_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="16sp"/>-->
+
+            <EditText
+                android:id="@+id/content_et_newNote"
+                style="@style/w_m_h_m"
+                android:hint="请输入内容....."
+                android:gravity="start|left"
+                android:maxLength="32617"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_newNote"
-        android:layout_width="56dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:visibility="visible"
-        app:fabSize="normal"
-        app:srcCompat="@mipmap/btn_add"/>
+
+
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/fab_newNote"-->
+    <!--android:layout_width="56dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="bottom|end"-->
+    <!--android:layout_margin="16dp"-->
+    <!--android:visibility="visible"-->
+    <!--app:fabSize="normal"-->
+    <!--app:layout_behavior="com.fengjie.myapplication.view.DefineHideFABBehavior"-->
+    <!--app:srcCompat="@mipmap/btn_add"/>-->
 
 
 </android.support.design.widget.CoordinatorLayout>

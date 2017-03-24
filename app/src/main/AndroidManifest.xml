@@ -63,19 +63,15 @@
 
         <!--android:label="@string/title_activity_new"-->
 
-        <activity
-            android:name=".modules.note.ui.NoteListActivity"
-            android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name=".modules.note.ui.NewNoteActivity"
+            android:name=".modules.run.ui.NewNoteActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
-            android:name=".modules.note.ui.NoteActivity"
+            android:name=".modules.travel.ui.NewTravelNoteActivity"
             android:launchMode="singleTask"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--图片选择器-->
         <activity
             android:name="me.iwf.photopicker.PhotoPickerActivity"
