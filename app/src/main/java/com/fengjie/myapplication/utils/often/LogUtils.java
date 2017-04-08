@@ -10,7 +10,6 @@ import android.util.Log;
 public class LogUtils
 {
 
-
 	private LogUtils ()
 	{
 		/* cannot be instantiated */

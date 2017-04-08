@@ -36,6 +36,7 @@ public class BillDao
 		SQLiteDatabase db = helper.getWritableDatabase();
 		Cursor cursor = null;
 		Bill bill = new Bill();
+		boolean IS_EXIST_DATA = false;
 		
 		try
 		{
@@ -53,6 +54,7 @@ public class BillDao
 				bill.setTicket(cursor.getInt(cursor.getColumnIndex("treat")));
 				bill.setInsurance(cursor.getInt(cursor.getColumnIndex("insurance")));
 				bill.setOther(cursor.getInt(cursor.getColumnIndex("other")));
+				IS_EXIST_DATA = true;
 			}
 			
 		} catch( SQLException e )
@@ -67,7 +69,7 @@ public class BillDao
 				db.close();
 		}
 		
-		return bill;
+		return IS_EXIST_DATA?bill:null;
 	}
 	
 	/**
@@ -79,7 +81,7 @@ public class BillDao
 	public static boolean insertDataToDB ( Bill bill )
 	{
 		SQLiteDatabase db = helper.getWritableDatabase();
-		
+		LogUtils.d("DEBUG", "insertDataToDB: ");
 		try
 		{
 			if ( bill != null )
@@ -111,7 +113,7 @@ public class BillDao
 	public static boolean updateDataToDB ( Bill bill )
 	{
 		SQLiteDatabase db = helper.getWritableDatabase();
-		
+		LogUtils.d("DEBUG", "updateDataToDB: ");
 		try
 		{
 			db.execSQL(SQL_UPDATE_DATA

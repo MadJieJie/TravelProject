@@ -28,6 +28,7 @@ public class MainActivity extends SupportActivity implements View.OnClickListene
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		RxBus.getInstance().register(this);         //注册RxBus
 		
 		findView();
 		initView();
@@ -142,14 +143,12 @@ public class MainActivity extends SupportActivity implements View.OnClickListene
 	private void initRxBus ()
 	{
 		RxBus.getInstance()
-				.register(this)
 				.tObservable(Event.class)
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(event ->
 				{
-					if ( event.getEvent() == Event.EVENT_CHANGE_CITY || event.getEvent() == Event.EVENT_UNREGISTER_USER)
+					if ( event.getEvent() == Event.EVENT_CHANGE_CITY || event.getEvent() == Event.EVENT_UNREGISTER_USER )
 					{
-//						mFlowingDrawer.toggleMenu();    //交换状态
 						mFlowingDrawer.closeMenu(true);
 						LogUtils.d("Debug", "initRxBus: " + "toggleMenu()");
 					}

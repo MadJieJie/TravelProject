@@ -3,7 +3,6 @@ package com.fengjie.myapplication.modules.tool.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +26,7 @@ import com.fengjie.myapplication.modules.tool.db.bill.BillDao;
 import com.fengjie.myapplication.modules.tool.db.weather.Time;
 import com.fengjie.myapplication.modules.tool.utils.weather.RxUtils;
 import com.fengjie.myapplication.utils.often.DateUtils;
+import com.fengjie.myapplication.utils.often.LogUtils;
 import com.fengjie.myapplication.utils.often.ToastUtils;
 import com.jaouan.compoundlayout.CompoundLayout;
 
@@ -79,7 +79,6 @@ public class BillFragment extends AbstractRetrofitFragment
 //	private String mTypeStr = "餐饮";
 	private String mTypeStr = "eat";
 	private boolean mIsTypeExist = false;
-	private boolean mIsDateIsExistData = false;
 	private volatile String mDate = null;
 	
 	/**
@@ -199,7 +198,7 @@ public class BillFragment extends AbstractRetrofitFragment
 		mDatePicker.setOnDatePickedListener(date ->
 		{
 			mDate = date;               //缓存当前选择的日期
-//			ToastUtils.showShort(BaseApplication.sAppContext, date);      /**获得选择的日期*/
+			ToastUtils.showShort(BaseApplication.sAppContext, mDate);      /**获得选择的日期*/
 		});
 
 //		mDatePicker.setDPDecor(new DPDecor(){
@@ -212,12 +211,16 @@ public class BillFragment extends AbstractRetrofitFragment
 		mAlertDialog.setCancelable(true);       //触摸外部不能关闭
 		mAlertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "确定", ( dialog, which ) ->
 		{
-			new Handler().post(() -> keepDataToDB(mDate_tv_bill.getText().toString()));            /**先保存之前日期数据入数据库*/
-			new Handler().postDelayed(() -> queryDateHaveData(mDate), 250);                     /**搜寻时间选择器*/
-			mDate_tv_bill.setText(mDate);                                        /**更新TextView日期*/
+			keepDataToDB(mDate_tv_bill.getText().toString());
+			queryDateHaveData(mDate);
+			mDate_tv_bill.setText(mDate);                                                       /**更新TextView日期*/
 			ToastUtils.showShort(BaseApplication.sAppContext, "已保存数据");
+			mAlertDialog.dismiss();
 		});
-//		mAlertDialog.dismiss();
+		mAlertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", ( dialog, which ) ->
+		{
+			mAlertDialog.dismiss();
+		});
 		
 	}
 	
@@ -329,6 +332,9 @@ public class BillFragment extends AbstractRetrofitFragment
 			} else if ( billRV.getTpye().equals("other") )
 			{
 				bill.setOther(Integer.parseInt(billRV.getMoney()));
+			} else
+			{
+				bill = null;
 			}
 			
 		}
@@ -357,7 +363,6 @@ public class BillFragment extends AbstractRetrofitFragment
 				.compose(RxUtils.rxSchedulerHelper())
 				.subscribe(bill ->
 				{
-					
 					mDatas.clear();              /**先清空现数据*/
 					if ( bill.getId() > Bill.EXIST_DATA )         /**如果存在数据则更新*/
 					{
@@ -369,13 +374,10 @@ public class BillFragment extends AbstractRetrofitFragment
 								mDatas.add(new BillRV(mMipmapIdArray[position], intArray[position] + "", mTypeArray[position]));
 							}
 						}
-						mEmptyWrapper.notifyDataSetChanged();    //更新RecyclerView
-						mIsDateIsExistData = true;      //该日期有数据
-					} else if ( bill.getId() == Bill.NOT_EXIST_DATA )        /**如果不存在数据则清空界面*/
-					{
-						mIsDateIsExistData = false;
-						mEmptyWrapper.notifyDataSetChanged();    //更新RecyclerView
 					}
+					mEmptyWrapper.notifyDataSetChanged();    //更新RecyclerView
+					LogUtils.d("DEBUG", "queryDateHaveData: ");
+					
 				});
 		
 	}
@@ -395,17 +397,19 @@ public class BillFragment extends AbstractRetrofitFragment
 					{
 						Bill bill = getBillForMDatas(new Bill(date));       //获取当前界面的所有数据
 						if ( bill != null )
+						{
 							e.onNext(bill);
+						}
 						e.onComplete();
 					}
 				})
 				.compose(RxUtils.rxSchedulerHelper())
 				.subscribe(bill ->
 				{
-					if ( mIsDateIsExistData )                      /**数据库已存在数据,则更新*/
+					if(BillDao.getQueryBillForDB(bill.getDate())!=null)     /**如果DB存在数据*/
 					{
 						BillDao.updateDataToDB(bill);
-					} else if ( mDatas.size() > 0 )             /**如果mData有数据则插入数据*/
+					} else                              //不存在数据则插入
 					{
 						BillDao.insertDataToDB(bill);
 					}

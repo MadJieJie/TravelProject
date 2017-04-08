@@ -41,7 +41,7 @@ public class CityDB
 
 		List< Province > list = new ArrayList<>();
 
-		Cursor cursor = db.query(TB_PROVINCE, null, null, null, null, null, null);
+		Cursor cursor = db.query("T_Province", null, null, null, null, null, null);
 
 		if ( cursor.moveToFirst() )
 		{
