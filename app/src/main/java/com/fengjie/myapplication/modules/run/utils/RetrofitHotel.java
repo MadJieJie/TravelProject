@@ -154,7 +154,8 @@ public class RetrofitHotel
 	 */
 	public Observable< Hotel > getHotel ( final int cityId, final int page, final boolean paybyvas )
 	{
-		final String key = "1c5ddc137f7d4c55b8495521b5ac15c4";
+//		final String key = "1c5ddc137f7d4c55b8495521b5ac15c4";
+		final String key = "88e0dea1d9124fc3a5cafd27dfd872d0";
 		
 		return Observable.create(new ObservableOnSubscribe< Hotel >()
 		{
