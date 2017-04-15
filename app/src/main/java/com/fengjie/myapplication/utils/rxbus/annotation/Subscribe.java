@@ -18,7 +18,7 @@ import java.lang.annotation.Target;
 @Target ( ElementType.METHOD)
 public @interface Subscribe
 {
-	@NonNull int tag();     //tag不能为空
+	@NonNull int tag ();     //tag不能为空
 	
-	EventThread thread() default EventThread.MAIN_THREAD;   //默认为主线程
+	EventThread thread () default EventThread.MAIN_THREAD;   //默认为主线程
 }

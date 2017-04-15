@@ -5,17 +5,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * 作者：Sendtion on 2016/10/24 0024 15:14
- * 邮箱：sendtion@163.com
- * 博客：http://sendtion.cn
- * 描述：数据库帮助类
+ * @author Created by MadJieJie on 2017/1/31-21:49.
+ * @brief
+ * @attention
  */
+
 
 public class SQLiteOpenUtils extends SQLiteOpenHelper
 {
 	
-	private final static String DB_NAME = "travel.db";// 数据库文件名
-	private final static int DB_VERSION = 1;// 数据库版本
+	private final static String DB_NAME = "travel.db";          // 数据库文件名
+	private final static int DB_VERSION = 1;                    // 数据库版本
 	
 	public SQLiteOpenUtils ( Context context )
 	{
@@ -40,7 +40,7 @@ public class SQLiteOpenUtils extends SQLiteOpenHelper
 
 		
 		//创建Table - bill
-		db.execSQL("CREATE TABLE bill(id INTEGER primary key autoincrement," +   //主键
+	/*	db.execSQL("CREATE TABLE bill(id INTEGER primary key autoincrement," +   //主键
 				           "date DATE NOT NULL," +      //日期
 				           "eat INTEGER NOT NULL," +    //吃
 				           "traffic INTEGER NOT NULL," +
@@ -69,7 +69,7 @@ public class SQLiteOpenUtils extends SQLiteOpenHelper
 				           "content TEXT(65535) NOT NULL," +                            //内容
 				           "create_time DATETIME NOT NULL," +                     //创建时间
 				           "update_time DATETIME  " +                     //更新时间
-				           ")");
+				           ")");*/
 		
 	}
 	
@@ -78,4 +78,6 @@ public class SQLiteOpenUtils extends SQLiteOpenHelper
 	{
 		
 	}
+	
+	
 }
